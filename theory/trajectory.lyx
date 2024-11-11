@@ -1,0 +1,621 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 11
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.5in
+\topmargin 1.5in
+\rightmargin 1.5in
+\bottommargin 1.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Theory
+\end_layout
+
+\begin_layout Subsection
+Pinhole camera model
+\end_layout
+
+\begin_layout Standard
+Without loss of generality, the pinhole is always located at 
+\begin_inset Formula $\left(0,0,0\right)$
+\end_inset
+
+.
+ Denote the position of an object by 
+\begin_inset Formula $\vec{r}=\left(x,y,z\right)$
+\end_inset
+
+, its velocity by 
+\begin_inset Formula $\vec{v}=\left(v_{x},v_{y},v_{z}\right)$
+\end_inset
+
+, its acceleration by 
+\begin_inset Formula $\vec{a}=\left(a_{x},a_{y},a_{z}\right)$
+\end_inset
+
+.
+ The screen is located at a vector 
+\begin_inset Formula $\vec{h_{s}}$
+\end_inset
+
+ from the origin, its screen coordinates basic vectors are 
+\begin_inset Formula $\hat{h_{0}}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{h_{1}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{h_{2}}$
+\end_inset
+
+.
+ Note that
+\begin_inset Formula 
+\begin{equation}
+\vec{h_{0}}\perp\vec{h_{1}}\perp\vec{h_{2}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\hat{h_{0}}\\
+\hat{h_{1}}\\
+\hat{h_{2}}
+\end{array}\right)=T\left(\begin{array}{c}
+\hat{x}\\
+\hat{y}\\
+\hat{z}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $T$
+\end_inset
+
+ is an orthonormal matrix.
+\end_layout
+
+\begin_layout Standard
+Ideally, 
+\begin_inset Formula $\hat{h_{0}}//\vec{h_{s}}$
+\end_inset
+
+.
+ But there might be a small angle between them.
+ Let's assume 
+\begin_inset Formula $\vec{h_{s}}=h_{s}\hat{h_{0}}$
+\end_inset
+
+.
+ The screen plane is given by
+\begin_inset Formula 
+\begin{equation}
+h_{s}\hat{h_{0}}+a\hat{h_{1}}+b\hat{h_{2}},\hspace{1em}a,b\in R
+\end{equation}
+
+\end_inset
+
+Then the projection of 
+\begin_inset Formula $\vec{r}$
+\end_inset
+
+ on the screen, 
+\begin_inset Formula $\vec{r'}=\left(a,b\right)$
+\end_inset
+
+, is given by
+\begin_inset Formula 
+\begin{equation}
+-k\vec{r}=h_{s}\hat{h_{0}}+a\vec{h_{1}}+b\vec{h_{2}}\label{eq:screen-proj}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\left(\vec{r},\hat{h_{1}},\hat{h_{2}}\right)\left(\begin{array}{c}
+k\\
+a\\
+b
+\end{array}\right)=-h_{s}\hat{h_{0}}
+\end{equation}
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+\left(\hat{h_{1}},\hat{h_{2}},\vec{r}\right)\left(\begin{array}{c}
+a\\
+b\\
+k
+\end{array}\right)=-h_{s}\hat{h_{0}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define 
+\begin_inset Formula 
+\begin{equation}
+C^{-1}=\left(\hat{h_{1}},\hat{h_{2}},\vec{r}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+as the inverse camera matrix.
+ The screen coordinates of the object 
+\begin_inset Formula $\left(a,b\right)$
+\end_inset
+
+, as well as its distance 
+\begin_inset Formula $k$
+\end_inset
+
+ from the pinhole, is given by
+\begin_inset Formula 
+\begin{equation}
+\underline{\left(\begin{array}{c}
+a\\
+b\\
+k
+\end{array}\right)=-C^{-1}h_{s}\hat{h_{0}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+The characteristics of the screen coordinates
+\end_layout
+
+\begin_layout Standard
+The world coordinates is denoted by 
+\begin_inset Formula $\left(\hat{x},\hat{y},\hat{z}\right)$
+\end_inset
+
+, where 
+\begin_inset Formula $\hat{z}$
+\end_inset
+
+ is the upward vertical direction and 
+\begin_inset Formula $\left(\hat{x},\hat{y}\right)$
+\end_inset
+
+ spans the ground.
+ In typical vision, 
+\begin_inset Formula $\vec{h}_{0}$
+\end_inset
+
+ is close to 
+\begin_inset Formula $\vec{h}_{s}$
+\end_inset
+
+.
+ And
+\begin_inset Formula $\vec{h_{2}}$
+\end_inset
+
+ is close to vertical, the angle between them being 
+\begin_inset Formula $\theta$
+\end_inset
+
+.
+ Then 
+\begin_inset Formula 
+\begin{equation}
+\hat{h_{2}}.\hat{z}=\cos\theta\approx1
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+T=\left(T_{ij}\right),1\le i,j\le3
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $T_{31},T_{32}\ll T_{33}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+The solution to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:screen-proj"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset Formula 
+\[
+k\vec{r}+h_{s}\hat{h_{0}}+a\vec{h_{1}}+b\vec{h_{2}}=0
+\]
+
+\end_inset
+
+Multiplying the equation by 
+\begin_inset Formula $\hat{h_{i}},$
+\end_inset
+
+
+\begin_inset Formula $i=0,1,2$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+k\left(\vec{r}.\hat{h_{0}}\right)=-h_{s}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+k\left(\vec{r}.\hat{h_{1}}\right)+a=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+k\left(\vec{r}.\hat{h_{2}}\right)+b=0
+\]
+
+\end_inset
+
+Therefore
+\begin_inset Formula 
+\begin{equation}
+\underline{k=-\frac{h_{s}}{\vec{r}.\hat{h_{0}}}},\hspace{1em}a=-k\left(\vec{r}.\hat{h_{1}}\right)=\underline{h_{s}\frac{\vec{r}.\hat{h_{1}}}{\vec{r}.\hat{h_{0}}}},\hspace{1em}b=\underline{h_{s}\frac{\vec{r}.\hat{h_{2}}}{\vec{r}.\hat{h_{0}}}}\label{eq:proj-solution}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if 
+\begin_inset Formula $\vec{r}\perp\hat{h_{0}},$
+\end_inset
+
+this object is out of the FOV and not on the screen.
+\end_layout
+
+\begin_layout Subsection
+Motion model
+\end_layout
+
+\begin_layout Standard
+In a short time 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+, all three frameworks could move and rotate.
+\end_layout
+
+\begin_layout Enumerate
+The object moves to 
+\begin_inset Formula $\vec{r}+\vec{v}\Delta t$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Enumerate
+The pinhole moves to 
+\begin_inset Formula $\left(0,0,0\right)+\vec{u}\Delta t$
+\end_inset
+
+.
+ We can safely assume 
+\begin_inset Formula $\vec{u}$
+\end_inset
+
+ is very small, 
+\begin_inset Formula $\vec{u}\approx0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The screen rotates from 
+\begin_inset Formula $T$
+\end_inset
+
+ to 
+\begin_inset Formula $T.\Delta T$
+\end_inset
+
+, where 
+\begin_inset Formula $\Delta T$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+small
+\begin_inset Quotes erd
+\end_inset
+
+ orthonormal matrix
+\end_layout
+
+\begin_layout Standard
+then its projection on the screen is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(\hat{h_{1}},\hat{h_{2}},\vec{r}+\left(\vec{v}-\vec{u}\right)\Delta t\right)\left(\begin{array}{c}
+a+\Delta a\\
+b+\Delta b\\
+k+\Delta k
+\end{array}\right)=-h_{s}\hat{h_{0}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+According to Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:proj-solution"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), the new projection point is
+\begin_inset Formula 
+\begin{equation}
+a+\Delta a=h_{s}\frac{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{1}}+\Delta\hat{h_{1}}\right)}{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{0}}+\Delta\hat{h_{0}}\right)}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+b+\Delta b=h_{s}\frac{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{2}}+\Delta\hat{h_{2}}\right)}{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{0}}+\Delta\hat{h_{0}}\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\Delta t\rightarrow0$
+\end_inset
+
+, the velocities of 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $b$
+\end_inset
+
+ are given by
+\begin_inset Formula 
+\begin{equation}
+\frac{da}{dt}=h_{s}\frac{\left(\vec{r}'.\hat{h_{1}}+\vec{r}.\hat{h_{1}'}\right)\left(\vec{r}.\hat{h_{0}}\right)-\left(\vec{r}.\hat{h_{1}}\right).\left(\vec{r}'.\hat{h_{0}}+\vec{r}.\hat{h_{0}'}\right)}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}=h_{s}\frac{U}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}+\vec{r}.\hat{h_{1}'}\right)\hat{h_{0}}-\left(\vec{r}'.\hat{h_{0}}+\vec{r}.\hat{h_{0}'}\right).\hat{h_{1}}\right]
+\]
+
+\end_inset
+
+If we simply let 
+\begin_inset Formula $\hat{h_{1}}=\hat{h_{0}}=0$
+\end_inset
+
+, i.e, the screen and the pinhole does not move, then
+\begin_inset Formula 
+\[
+U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}\right)\hat{h_{0}}-\left(\vec{r}'.\hat{h_{0}}\right)\hat{h_{1}}\right]
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+Appendix
+\end_layout
+
+\begin_layout Subsection
+Matrix op
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+ be the inverse matrix of 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ Consider the inverse matrix of 
+\begin_inset Formula $A+dA$
+\end_inset
+
+, where 
+\begin_inset Formula $|dA|\ll|A|$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+A+dA=A(I+A^{-1}dA)
+\]
+
+\end_inset
+
+Let 
+\begin_inset Formula $dB=A^{-1}dA$
+\end_inset
+
+, then
+\begin_inset Formula 
+\[
+\left(I-dB\right)A^{-1}.A\left(I+dB\right)=\left(I-dB\right)\left(I+dB\right)=I-\left(dB\right)^{2}\approx I
+\]
+
+\end_inset
+
+Therefore 
+\begin_inset Formula 
+\[
+\left(A+dA\right)^{-1}\approx\boxed{A^{-1}-A^{-1}\left(dA\right)A^{-1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Differential vectors
+\end_layout
+
+\begin_layout Standard
+For a dot product of two vectors 
+\begin_inset Formula $u=\vec{x}.\vec{y}$
+\end_inset
+
+, its derivative is
+\begin_inset Formula 
+\[
+\frac{du}{dt}=\frac{d}{dt}\left(\vec{x}.\vec{y}\right)=\frac{d\vec{x}}{dt}.\vec{y}+\vec{x}.\frac{d\vec{y}}{dt}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
