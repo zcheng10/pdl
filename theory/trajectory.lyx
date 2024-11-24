@@ -279,7 +279,7 @@ The world coordinates is denoted by
 \end_inset
 
 .
- And
+ And 
 \begin_inset Formula $\vec{h_{2}}$
 \end_inset
 
@@ -526,10 +526,10 @@ U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}+\vec{r}.\hat{h_{1}'}\right)\hat{h_{0}
 \end_inset
 
 If we simply let 
-\begin_inset Formula $\hat{h_{1}}=\hat{h_{0}}=0$
+\begin_inset Formula $\hat{h_{1}'}=\hat{h_{0}'}=0$
 \end_inset
 
-, i.e, the screen and the pinhole does not move, then
+, i.e, the screen and the pinhole do not move, then
 \begin_inset Formula 
 \[
 U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}\right)\hat{h_{0}}-\left(\vec{r}'.\hat{h_{0}}\right)\hat{h_{1}}\right]
@@ -537,9 +537,153 @@ U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}\right)\hat{h_{0}}-\left(\vec{r}'.\hat
 
 \end_inset
 
+
+\begin_inset Formula 
+\begin{equation}
+U=\vec{r}.\left[\left(\vec{v}.\hat{h_{1}}\right)\hat{h_{0}}-\left(\vec{v}.\hat{h_{0}}\right)\hat{h_{1}}\right]\label{eq:change-of-screen-coordinate}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Recall the 
+\emph on
+vector triple product
+\emph default
+ identity, 
+\begin_inset Formula $\vec{a}\times\left(\vec{b}\times\vec{c}\right)=\left(\vec{a}.\vec{c}\right)\vec{b}-\left(\vec{a}.\vec{b}\right)\vec{c}$
+\end_inset
+
+, then (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:change-of-screen-coordinate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) becomes
+\begin_inset Formula 
+\begin{equation}
+U=\vec{r}.\left(\vec{v}\times\left(\vec{h_{0}}\times\vec{h_{1}}\right)\right)=\vec{r}.\left(\vec{v}\times\vec{h_{2}}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\underline{\frac{da}{dt}=h_{s}\frac{\vec{r}.\left(\vec{v}\times\vec{h_{2}}\right)}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\underline{\frac{db}{dt}=-h_{s}\frac{\vec{r}.\left(\vec{v}\times\vec{h_{1}}\right)}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that
+\begin_inset Formula 
+\[
+\vec{A}.\left(\vec{B}\times\vec{C}\right)=\left(\vec{A},\vec{B},\vec{C}\right)=\left|\begin{array}{ccc}
+A_{x} & A_{y} & A_{z}\\
+B_{x} & B_{y} & B_{z}\\
+C_{x} & C_{y} & C_{z}
+\end{array}\right|
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Network
+\end_layout
+
+\begin_layout Enumerate
+Yolo: gives the bounding box of the ball in a frame, 
+\begin_inset Formula $\left(a_{1},b_{1}\right)$
+\end_inset
+
+, 
+\begin_inset Formula $\left(a_{2},b_{2}\right)$
+\end_inset
+
+, denoted by
+\begin_inset Formula 
+\[
+B=\left(\begin{array}{cc}
+a_{1} & b_{1}\\
+a_{2} & b_{2}
+\end{array}\right)=\left(\begin{array}{c}
+a_{1}\\
+b_{1}\\
+a_{2}\\
+b_{2}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Physical network (PNN): 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+input: a series of bounding boxes in consecutive frames, 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+, ..., 
+\begin_inset Formula $B_{m}$
+\end_inset
+
  
 \end_layout
 
+\begin_layout Enumerate
+output: the predicted bounding boxes in the following frames, 
+\begin_inset Formula $B_{m+1}$
+\end_inset
+
+, ...,
+\begin_inset Formula $B_{m+L}$
+\end_inset
+
+, where 
+\begin_inset Formula $L$
+\end_inset
+
+ is the prediction sequence length.
+\end_layout
+
+\begin_layout Enumerate
+intermediate variables (hidden variables): the position of the 
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Appendix
 \end_layout
