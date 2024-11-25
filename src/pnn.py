@@ -5,6 +5,8 @@ from torch import nn
 import numpy as np
 import math
 
+arr = lambda *args, **kwargs: np.array(*args, **kwargs)
+
 class Object:
     """An object in the world
     """
@@ -15,10 +17,17 @@ class Object:
         self.name = name
         self.size = size
 
-        self.r = r
-        self.v = v
-        self.a = a
+        self.r = r  # position
+        self.v = v  # velocity
+        self.a = a  # acceleration
 
+        # -- get its bbox relative to the center
+        oft = [ [-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1],
+               [1, -1, -1], [1, -1, 1], [1, 1, 1], [1, 1, -1]]
+        self.bbox = np.array(oft) * size
+
+    def valid(self) -> bool:
+        return self.r is not None
 
     def move(self, t) -> None:
         """state change after a period of time t
@@ -75,16 +84,31 @@ class Projector:
         self.scr.append(Blob(ob.name))
     
 
+    def getScreenCoordinate(self, r:np.array) -> np.array:
+        """Compute the screen coordinate of a point
+        """
+        k = -self.hs / (r @ self.h0)
+        a = -k * (r @ self.h1)
+        b = -k * (r @ self.h2)
+        return np.array([a, b])
+
+
     def toScreen(self, ob: Object, br: Blob) -> None:
         """Project the object to the screen
         """
-        r = ob.r
-        k = -self.hs * (r @ self.h0)
-        a = -k * (r @ self.h1)
-        b = -k * (r @ self.h2)
-        br.ct[0:2] = (a, b)
+        br.ct[0:2] = self.getScreenCoordinate(ob.r)
 
         # -- projection of borders
+        s = np.zeros([8, 2])
+        for r, i in ob.bbox:
+            s[i] = self.getScreenCoordinate(r + ob.r)
+        s1 = np.min(s, axis = 0)
+        s2 = np.max(s, axis = 0)
+        br.bbox[:2] = s1
+        br.bbox[2:] = s2
+
+        
+        
 
 
 
