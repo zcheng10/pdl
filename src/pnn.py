@@ -1,5 +1,6 @@
 import os
 import sys
+from copy import deepcopy
 
 from torch import nn
 import numpy as np
@@ -92,6 +93,13 @@ class Projector:
         # center and bounding boxes
         self.scr = []
 
+    def __str__(self) -> str:
+        s = "h0, h1, h2:"
+        s += str(self.h0) + " " + str(self.h1)
+        s += " " + str(self.h2) + ", hs:" + str(self.hs)
+        s += ", zoom: " + str(self.zoom)
+        return s
+
 
     def addObject(self, ob : Object) -> None:
         """Add an object to this world
@@ -114,7 +122,7 @@ class Projector:
         """
         br = Blob(name = ob.name)
         br.ct[0:2] = self.getScreenCoordinate(ob.r)
-
+        
         # -- projection of borders
         n = len(ob.bbox)
         s = np.zeros([n, 2])
@@ -124,7 +132,8 @@ class Projector:
         s2 = np.max(s, axis = 0)
         br.bbox[:2] = s1
         br.bbox[2:] = s2
-        return br
+
+        return deepcopy(br)
 
         
         
