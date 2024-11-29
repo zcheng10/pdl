@@ -6,6 +6,10 @@ import cv2
 arr = lambda *args, **kwargs: np.array(*args, **kwargs)
 
 class P3:
+    basex = arr([1,0,0], dtype = float)
+    basey = arr([0,1,0], dtype = float)
+    basez = arr([0,0,1], dtype = float)
+
     @staticmethod
     def line(p1, p2, text = None, ax = plt, **kwargs):
         x = [p1[0], p2[0]]
@@ -28,7 +32,7 @@ class P3:
         lines = []
         tags = ["x", "y", "z"]
         for i in range(3):
-            ed = arr(st)
+            ed = arr(st, dtype = "float")
             ed += length
             lines.append([st, ed, tags[i]])
         P3.lines(lines, ax = ax, **kwargs)
@@ -63,8 +67,6 @@ class P3:
         - color: Color of the rectangle.
         - alpha: Transparency of the rectangle.
         """
-        x, y, z = corner
-        
         # Define the vertices of the cuboid
         vertices = [
             corner,

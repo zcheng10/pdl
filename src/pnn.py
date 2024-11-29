@@ -1,147 +1,96 @@
-import os
-import sys
-from copy import deepcopy
-
+import torch
 from torch import nn
 import numpy as np
-import math
 
-arr = lambda *args, **kwargs: np.array(*args, **kwargs)
+basex = torch.tensor([1, 0, 0], requires_grad=False)
+basey = torch.tensor([0, 1, 0], requires_grad=False)
+basez = torch.tensor([0, 0, 1], requires_grad=False)
 
-class Object:
-    """An object in the world
+def objectTensor(r, v = (0, 0, 0), a = (0, 0, 0), 
+                 size = 0):
+    """An object is represented by a tensor
+    shape: [B, N] or [N]
+    B: batch
+    N = 10, [r1, r2, r3, v1, v2, v3, a1, a2, a3, size]
     """
-    def __init__(self, name, size : float = 0,
-                r: np.array = None,
-                v : np.array = arr([0, 0, 0], dtype = float),
-                a: np.array = arr([0, 0, 0], dtype = float)) -> None:
-        self.name = name
-        self.size = size
+    t = list(r[0:3]) + list(v[0:3]) + list(a[0:3]) + [size]
+    return torch.tensor(t)
 
-        self.r = r  # position
-        self.v = v  # velocity
-        self.a = a  # acceleration
-
-        # -- get its bbox relative to the center
-        oft = [ [-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1],
-               [1, -1, -1], [1, -1, 1], [1, 1, 1], [1, 1, -1]]
-        self.bbox = np.array(oft, dtype = float) * size
-
-    def __str__(self) -> str:
-        s = self.name
-        s += ", size: " + str(self.size)
-        s += ", r: " + str(self.r)
-        s += ", v: " + str(self.v)
-        return s
-
-    def valid(self) -> bool:
-        return self.r is not None
-
-    def move(self, t) -> None:
-        """state change after a period of time t
-        """
-        self.r += self.v * t + self.a * (t**2) * 0.5
-        self.v += self.a * t
-
-
-class Blob:
-    """The representation of an object on the screen
-    Note that ct is the projection of the center of the object.
-    It is not necessarily at the center of the bounding box 
-
-    bbox: [x0, y0, x1, y1]
+def decodeObject(t : torch.tensor):
+    """Decompose 1 object tensor to r, v, a
     """
-    def __init__(self, name = "", 
-                 ct : np.array = np.array([0, 0], dtype = float), 
-                 bbox : np.array = np.array([0, 0, -1, -1], dtype = float)) -> None:
-        self.name = name
-        self.ct = ct
-        self.bbox = bbox
+    if len(t.shape) == 1:
+        r, v, a, sz = t[:3], t[3:6], t[6:9], t[9]
+    else:
+        # batch
+        r, v, a, sz = t[:, :3], t[:, 3:6], t[:, 6:9], t[:, 9]
+    return r, v, a, sz
 
-    def valid(self) -> bool:
-        """ whether it is an valid image
-        """
-        return self.bbox[2] >= self.bbox[0] and self.bbox[3] >= self.bbox[1]
-    
-    def __str__(self) -> str:
-        s = self.name
-        s += ", ct: " + str(self.ct)
-        s += ", bbox: " + str(self.bbox)
-        return s 
-
-
-
-class Projector:
-    """World coordinates r = (x, y, z) mapped to
-    screen coordinates u = (a, b)
-
-    The pinhole is located at (0, 0, 0)
+def object2box(t: torch.tensor):
+    """Convert this tensor to center and bbox
+    The last dimension [N = 10] -> [9, 3]
+    where 9 corresponds to 9 points, center and vertexes
+    3 corresponds to their coordinates
     """
-
-    def __init__(self, h0: np.array, h1: np.array, 
-                 hs : float, zoom: float = 1000) -> None:
-        self.h0 = h0 / math.sqrt(h0 @ h0)
-        self.h1 = h1 / math.sqrt(h1 @ h1)
-        self.h2 = np.cross(self.h0, self.h1)
-        self.hs = hs
-        self.zoom = zoom
-
-        # -- objects: "name", (x, y, z), v, a
-        self.objs = []
-
-        # -- the screen coordinates of the objects, including
-        # center and bounding boxes
-        self.scr = []
-
-    def __str__(self) -> str:
-        s = "h0, h1, h2:"
-        s += str(self.h0) + " " + str(self.h1)
-        s += " " + str(self.h2) + ", hs:" + str(self.hs)
-        s += ", zoom: " + str(self.zoom)
-        return s
+    a = torch.zeros([*t.shape[:-1], 9, 3], dtype = float)
+    sz = t[...,9] / 2
+    a[..., 0, :] = t[..., 0:3]
+    a[..., 1, :] = t[..., 0:3] + (-basex - basey - basez) * sz
+    a[..., 2, :] = t[..., 0:3] + (-basex + basey - basez) * sz
+    a[..., 3, :] = t[..., 0:3] + (basex + basey - basez) * sz
+    a[..., 4, :] = t[..., 0:3] + (basex - basey - basez) * sz
+    sz *= 2
+    a[..., 5, :] = a[..., 1, :] + basez * sz
+    a[..., 6, :] = a[..., 2, :] + basez * sz
+    a[..., 7, :] = a[..., 3, :] + basez * sz
+    a[..., 8, :] =a [..., 4, :] + basez * sz
+    return a
 
 
-    def addObject(self, ob : Object) -> None:
-        """Add an object to this world
-        """
-        self.objs.append(ob)
-        self.scr.append(Blob(ob.name))
-    
-
-    def getScreenCoordinate(self, r:np.array) -> np.array:
-        """Compute the screen coordinate of a point
-        """
-        k = -self.hs / (r @ self.h0)
-        a = -k * (r @ self.h1)
-        b = -k * (r @ self.h2)
-        return np.array([a, b]) * self.zoom
-
-
-    def toScreen(self, ob: Object) -> Blob:
-        """Project the object to the screen
-        """
-        br = Blob(name = ob.name)
-        br.ct[0:2] = self.getScreenCoordinate(ob.r)
+class ProjectorNN(nn.Module):
+    def __init__(self, basis = None):
+        super(ProjectorNN, self).__init__()
+        # Initialize a learnable 3x3 tensor
+        if basis is None:
+            self.basis = nn.Parameter(torch.randn(3, 3, dtype = float))
+        else:
+            self.basis = torch.tensor(basis, requires_grad=True, dtype = float)
         
-        # -- projection of borders
-        n = len(ob.bbox)
-        s = np.zeros([n, 2])
-        for i in range(n):
-            s[i] = self.getScreenCoordinate(ob.bbox[i] + ob.r)
-        s1 = np.min(s, axis = 0)
-        s2 = np.max(s, axis = 0)
-        br.bbox[:2] = s1
-        br.bbox[2:] = s2
+        self.zoom = 1000 * 0.2  # hs * zoom
 
-        return deepcopy(br)
+    def forward(self, x):
+        """
+        Forward pass that performs matrix multiplication.
+        Input:
+            x - A tensor of shape (3,) or (batch_size, 3)
+        Output:
+            A tensor of shape (3,) or (batch_size, 3), result of matrix multiplication.
+        """
+        x = torch.matmul(self.basis, x.mT).mT  # Handles both single and batched input
 
+        """
+        Divide all entries by the first entry along the specified dimension, except for the batch dimension.
+        :param x: Input tensor of shape (batch_size, ...).
+        :return: Tensor with entries divided by the first element along the specified dimension.
+        """
+        dim = -1
+        if x.size(dim) == 0:
+            raise ValueError("Specified dimension is empty.")
         
+        # Select the first entry along the specified dimension for each batch
+        first_entry = x.select(dim, 0).unsqueeze(dim)
         
+        # Ensure no division by zero
+        if torch.any(first_entry == 0):
+            raise ValueError("Division by zero detected in the first entry of the specified dimension.")
+        
+        y = x / first_entry * self.zoom
+        y = y[:, 1:, ...]   # removing the 1st entry
 
-
-
-
-
-
-
+        """Keep the bbox, [min, max], [..., n, 2] -> [..., 2, 2]
+        """
+        y1, _ = torch.min(y, dim = -2)
+        y2, _ = torch.max(y, dim = -2)
+        y = torch.stack((y1, y2))
+        return y
 
