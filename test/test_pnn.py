@@ -88,12 +88,23 @@ class TestBasic(unittest.TestCase):
         print("bbox =", a)
 
         m = ProjectorNN(basis = TestBasic.BASIS)
+        m.basis.requires_grad = False
         y = m(a)
         print("projected box =", y)
 
         y.sum().backward()
         print("object grad =", t.grad)
         print("projector grad =", m.basis.grad)
+
+
+    def test_objectMoving(self):
+        t = objectTensor(r = TestBasic.BALLS[0], a = (0, 0, 10), 
+                         size = 0.1).double()
+        t.requires_grad = True
+        s = MotionNN.moved(t, dt = 0.1)
+        print("before moving:", t)
+        print("after moving:", s)
+        print("moved grad:", t.grad)
 
 
     def test_drawbox(self):
@@ -107,6 +118,7 @@ class TestBasic(unittest.TestCase):
 
         ax.grid(False)
         ax.axis("off")
+
         
     def test_done(self):
         # plt.show()

@@ -17,9 +17,9 @@ class Object:
         self.name = name
         self.size = size
 
-        self.r = r  # position
-        self.v = v  # velocity
-        self.a = a  # acceleration
+        self.r = r.astype("float") if r is not None else None  # position
+        self.v = v.astype("float") # velocity
+        self.a = a.astype("float")  # acceleration
 
         # -- get its bbox relative to the center
         oft = [ [-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1],
@@ -31,6 +31,7 @@ class Object:
         s += ", size: " + str(self.size)
         s += ", r: " + str(self.r)
         s += ", v: " + str(self.v)
+        s += ", a:" + str(self.a)
         return s
 
     def valid(self) -> bool:
@@ -42,7 +43,31 @@ class Object:
         self.r += self.v * t + self.a * (t**2) * 0.5
         self.v += self.a * t
 
-    def copy(self):
+    def reflected(self, ground:float = -1.5) -> None:
+        if self.r[2] <= ground:
+                self.r[2] = ground
+                if self.v[2] < 0:
+                    self.v[2] = - self.v[2]
+
+    def deflected(self, impulse: np.array) -> None:
+        """Sudden change of v
+        """
+        self.v += impulse
+
+    def acc(self, slow : float = 0, curve: float = 0,
+            gravity:float = 10) -> None:
+        """slowdonw the velocity by a factor 
+           and centrapital acceleartion
+        """
+        basez = arr([0, 0, 1], dtype = float)
+        self.a =  -basez * gravity
+        if slow > 0 and slow < 1:
+            self.a += self.v * (slow - 1)
+        
+        b = np.cross(self.v, basez)
+        self.a += b * curve
+
+    def clone(self):
         return deepcopy(self)
 
 
@@ -71,9 +96,8 @@ class Blob:
         s += ", bbox: " + str(self.bbox)
         return s 
     
-    def copy(self):
+    def clone(self):
         return deepcopy(self)
-
 
 
 class Projector:
@@ -138,5 +162,40 @@ class Projector:
         br.bbox[:2] = s1
         br.bbox[2:] = s2
 
-        return br.copy()
+        return br.clone()
+    
+
+class CaseGenerator:
+    """Generating trajectories
+    """
+    def __init__(self) -> None:
+        self.p = p = Projector(
+            h0 = arr([1, 0, 0], dtype = float),
+            h1 = arr([0, 1, 0], dtype = float),
+            hs = 0.2)
+        
+        self.ts = []    # objects
+        self.curves = []    # curves for each object
+        self.slows = []     # slow down factors for each object
+        self.dt = 0.03  # time interval, in sec
+        self.num = 300  # number of frames to simulate
+
+    def config(self, slow_range : float, curve_range: float,
+               v_range:tuple) -> None:
+        """Parameters:
+        slow_range: the max slow_down
+        curve_range: curve in (-curve_range, +curve_range)
+        """
+
+    def addObject(self, name:str, r, v, size: float = 0.22):
+        self.ts.append(Object(name, size, 
+                         r = arr(r, dtype = float),
+                         v = arr(v, dtype = float))
+        )
+
+    
+
+
+
+
 

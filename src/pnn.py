@@ -2,9 +2,9 @@ import torch
 from torch import nn
 import numpy as np
 
-basex = torch.tensor([1, 0, 0], requires_grad=False)
-basey = torch.tensor([0, 1, 0], requires_grad=False)
-basez = torch.tensor([0, 0, 1], requires_grad=False)
+basex = torch.tensor([1, 0, 0], dtype = float, requires_grad=False)
+basey = torch.tensor([0, 1, 0], dtype = float, requires_grad=False)
+basez = torch.tensor([0, 0, 1], dtype = float, requires_grad=False)
 
 def objectTensor(r, v = (0, 0, 0), a = (0, 0, 0), 
                  size = 0):
@@ -26,14 +26,82 @@ def decodeObject(t : torch.tensor):
         r, v, a, sz = t[:, :3], t[:, 3:6], t[:, 6:9], t[:, 9]
     return r, v, a, sz
 
-def object2box(t: torch.tensor):
+class MotionNN:
+    """Motion of objects
+    """
+    @staticmethod
+    def moved(t: torch.tensor, dt : float) -> torch.tensor:
+        """Assume dt is small
+        Change the state of this object tensor
+        """
+        s = t.clone()
+        s[...,0:3] = t[..., 0:3] + t[..., 3:6] * dt
+        s[...,3:6] = t[..., 3:6] + t[..., 6:9] * dt
+        return s
+
+    @staticmethod
+    def reflected(t: torch.tensor, ground : float = -1.5) -> None:
+        """reflected by the ground
+        """
+        for i in range(t.shape[0]):
+            if t[i, 2] <= ground:
+                t[i, 2] = ground
+                if t[i, 5] < 0:
+                    t[i, 5] = - t[i, 5]
+
+    @staticmethod
+    def deflected(t: torch.tensor, impulse: torch.tensor) -> None:
+        """Sudden change of v
+        """
+        t[..., 3:6] += impulse
+        
+    
+    @staticmethod
+    def acc(t: torch.tensor, slow : float = 0, curve: float = 0,
+            gravity = 10) -> None:
+        """slowdonw the velocity by a factor 
+           and centrapital acceleartion
+        """
+        t[..., 6:9] =  - basez * gravity
+        if slow > 0 and slow < 1:
+            t[..., 6:9] += t[..., 3:6] * (slow - 1)
+        
+        if curve>0:
+            a = torch.cross(t[..., 3:6].double(), basez.unsqueeze(0),
+                        dim = -1)
+            t[..., 6:9] += a * curve
+
+
+    @staticmethod
+    def freeFall(t: torch.tensor) -> None:
+        """Change the accelerator to free fall
+        """
+        t[..., 6] = 0
+        t[..., 7] = 0
+        t[..., 8] = 10
+
+    @staticmethod
+    def constVec(t: torch.tensor) -> None:
+        """set a to be 0
+        """
+        t[..., 6:9] = 0
+
+    @staticmethod
+    def idle(t: torch.tensor) -> None:
+        """set v and a be 0
+        """ 
+        t[..., 3:9] = 0
+
+        
+
+def object2box(t: torch.tensor, sz = 0.1):
     """Convert this tensor to center and bbox
     The last dimension [N = 10] -> [9, 3]
     where 9 corresponds to 9 points, center and vertexes
     3 corresponds to their coordinates
     """
     a = torch.zeros([*t.shape[:-1], 9, 3], dtype = float)
-    sz = t[...,9] / 2
+    # sz = t[...,9] / 2
     a[..., 0, :] = t[..., 0:3]
     a[..., 1, :] = t[..., 0:3] + (-basex - basey - basez) * sz
     a[..., 2, :] = t[..., 0:3] + (-basex + basey - basez) * sz
@@ -85,12 +153,12 @@ class ProjectorNN(nn.Module):
             raise ValueError("Division by zero detected in the first entry of the specified dimension.")
         
         y = x / first_entry * self.zoom
-        y = y[:, 1:, ...]   # removing the 1st entry
+        y = y[..., 1:]   # removing the 1st entry
 
         """Keep the bbox, [min, max], [..., n, 2] -> [..., 2, 2]
         """
         y1, _ = torch.min(y, dim = -2)
         y2, _ = torch.max(y, dim = -2)
-        y = torch.stack((y1, y2))
+        # print("y, y1, y2 =", y.shape, y1.shape, y2.shape)
+        y = torch.stack((y1, y2), dim = -1)
         return y
-

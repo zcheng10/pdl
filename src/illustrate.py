@@ -33,7 +33,7 @@ class P3:
         tags = ["x", "y", "z"]
         for i in range(3):
             ed = arr(st, dtype = "float")
-            ed += length
+            ed[i] += length
             lines.append([st, ed, tags[i]])
         P3.lines(lines, ax = ax, **kwargs)
 
