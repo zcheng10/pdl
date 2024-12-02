@@ -6,6 +6,8 @@ from src.pworld import *
 from src.pnn import *
 from src.illustrate import *
 
+nround = lambda x : np.round(x, 2)
+
 class TestBasic(unittest.TestCase):
 
     BALLS = [
@@ -19,6 +21,10 @@ class TestBasic(unittest.TestCase):
     BASIS = arr([
         [1, 0, 0], [0, 1, 0], [0, 0, 1]
         ], dtype = float)
+    
+    def __init__(self, methodName: str = "runTest") -> None:
+        super().__init__(methodName)
+        self.verbose = False
 
     def test_Object(self):
         """Test Object"""
@@ -76,14 +82,14 @@ class TestBasic(unittest.TestCase):
 
     def test_objectTensor(self):
         t = objectTensor(r = TestBasic.BALLS[0], a = (0, 0, 10), 
-                         size = 0.1).double()
+                         size = 0.1)
         t.requires_grad = True
         print("object tensor =", t)
 
         r, v, a, sz = decodeObject(t)
         print("decoded to", r, v, a, sz)
 
-        a = object2box(t)
+        a = object2box(t, sz = 0.1)
         # a.requires_grad = False
         print("bbox =", a)
 
@@ -99,7 +105,7 @@ class TestBasic(unittest.TestCase):
 
     def test_objectMoving(self):
         t = objectTensor(r = TestBasic.BALLS[0], a = (0, 0, 10), 
-                         size = 0.1).double()
+                         size = 0.1)
         t.requires_grad = True
         s = MotionNN.moved(t, dt = 0.1)
         print("before moving:", t)
@@ -119,7 +125,62 @@ class TestBasic(unittest.TestCase):
         ax.grid(False)
         ax.axis("off")
 
-        
+    def test_sample(self):
+        frames = 3
+        sm = Sample(frames = frames)
+        p = Projector(h0 = P3.basex, h1 = P3.basey, hs = 0.2)
+        t = Object("ball", size = 0.1, 
+           r = arr([10, 0, -1.5]),
+           v = arr([10, 15, 11]))
+        dt = 0.03
+        for i in range(frames):
+            br = p.toScreen(t)
+            sm.add(t, br)
+            t.move(dt)
+
+        if self.verbose:
+            print("frames =\n", sm)
+            print("------")
+
+    def test_case_gen(self):
+        cg = CaseGenerator()
+        cg.config(slow_range = 0.1, curve_range = 0.5, 
+                  r_range = ((10, 20), (-20, 20), (-1.5, 2)),
+                  v_range=((-5, 20), (-10, 10), (0, 30)))
+        cg.addRandomObjects(10)
+
+        if self.verbose:
+            for i, x in enumerate(cg.ts):
+                print(i, "->", x, 
+                    "\ncurvr, slow:", cg.curves[i], cg.slows[i])
+            print("------")
+
+            cg.gen(num = 300, file = "test2.txt") 
+
+    def test_case_read(self):
+        file = "test1.txt"
+        pa = CaseGenerator.read(file)
+        print("number of cases =", len(pa))
+        if self.verbose:
+            for x in pa:
+                print(x)
+                print("------")
+
+    def test_moved(self):
+        input = [[-183.335, -16.754, -177.264, -13.321],
+                  [-179.449, -10.260, -173.556, -6.994],
+                  [-175.814, -4.306, -170.085, -1.192],
+                  [-172.415, 1.118, -166.838, 4.176]]
+        input = torch.tensor(input, requires_grad=False)
+
+        print("Solving...")
+        m = MotionSolver()
+        pose, next_states, _ = m.solve(input)
+        print("Estimated state =", 
+              nround(pose.detach().numpy()))
+        print("Next 4 states: ",
+              nround(next_states.detach().numpy()))
+
     def test_done(self):
         # plt.show()
         pass

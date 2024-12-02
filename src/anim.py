@@ -4,40 +4,59 @@ from illustrate import *
 from matplotlib.animation import FuncAnimation
 
 anim2D = anim3D = False
+readIn = None
 
 if len(sys.argv) >= 2:
     anim3D = (sys.argv[1] == "3")
     anim2D = (sys.argv[1] == "2")
 
-p = Projector(h0 = P3.basex, h1 = P3.basey, hs = 0.2)
-ts = [Object("ball", size = 0.1, 
-           r = arr([10, 0, -1.5]),
-           v = arr([10, 15, 11]))
-]
-ts.append(ts[0].clone())
+if len(sys.argv) >= 3:
+    readIn = sys.argv[2]
 
-curves = [0, 0.5]
+legendOn = ("-l" in sys.argv)
 
-dt = 0.03
-for i, t in enumerate(ts):
-    t.acc(slow = 0.1 * dt, curve = curves[i] )
+if readIn is not None:
+    # -- get data from this file
+    pa = CaseGenerator.read(readIn)
+    tsn = len(pa)
+    num = len(pa[0])
 
-num = 300
-tsn = len(ts)
-px = np.zeros([tsn, num])
-py = np.zeros([tsn,num])
-pall = np.zeros([tsn, num, 3])
+    pa = arr(pa)    # n, num, 15 
+    px = pa[:, :, 9]
+    py = pa[:, :, 10]
+    pall = pa[:, :, 0:3]
+    curves = [i+1 for i in range(tsn)]
 
-for j, t in enumerate(ts):
-    for i in range(300):
-        t.move(dt)
-        br = p.toScreen(t)
-        px[j, i] = br.ct[0]
-        py[j, i] = br.ct[1]
-        pall[j, i, :] = t.r.copy()
+else:
+    p = Projector(h0 = P3.basex, h1 = P3.basey, hs = 0.2)
+    ts = [Object("ball", size = 0.1, 
+            r = arr([10, 0, -1.5]),
+            v = arr([-20, 15, 11]))
+    ]
+    ts.append(ts[0].clone())
 
-        t.acc(slow = 0.1 * dt, curve = curves[j])
-        t.reflected()
+    curves = [0, 0.5]
+
+    dt = 0.03
+    for i, t in enumerate(ts):
+        t.acc(slow = 0.1 * dt, curve = curves[i] )
+
+    num = 300
+    tsn = len(ts)
+    px = np.zeros([tsn, num])
+    py = np.zeros([tsn,num])
+    pall = np.zeros([tsn, num, 3])
+
+    for j, t in enumerate(ts):
+        for i in range(300):
+            t.move(dt)
+            br = p.toScreen(t)
+            px[j, i] = br.ct[0]
+            py[j, i] = br.ct[1]
+            pall[j, i, :] = t.r.copy()
+
+            t.acc(slow = 0.1 * dt, curve = curves[j])
+            t.reflected()
 
 # -- get range
 px_range = (np.min(px), np.max(px))
@@ -59,7 +78,8 @@ if anim3D:
     ax.set_ylabel("Y")
     ax.set_zlabel("Z")
     # ax.axis("equal")
-    ax.legend()
+    if legendOn:
+        ax.legend()
     ax.view_init(elev=30, azim=120)  # Adjust angles as needed
 
     cnt = 0
@@ -91,7 +111,8 @@ if anim2D:
     ax.set_ylim(py_range)
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
-    ax.legend()
+    if legendOn:
+        ax.legend()
         
     cnt = 0
     # Animation function

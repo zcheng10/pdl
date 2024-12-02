@@ -4,6 +4,7 @@ from copy import deepcopy
 
 import numpy as np
 import math
+import random
 
 arr = lambda *args, **kwargs: np.array(*args, **kwargs)
 
@@ -55,7 +56,8 @@ class Object:
         self.v += impulse
 
     def acc(self, slow : float = 0, curve: float = 0,
-            gravity:float = 10) -> None:
+            gravity:float = 10,
+            disturb: float = None) -> None:
         """slowdonw the velocity by a factor 
            and centrapital acceleartion
         """
@@ -66,6 +68,13 @@ class Object:
         
         b = np.cross(self.v, basez)
         self.a += b * curve
+
+        if disturb is not None:
+            # -- randomly multiply a factor
+            f = random.uniform(disturb[0], disturb[1])
+            self.a *= (1 + f)
+        
+        # print("self.a =", self.a)
 
     def clone(self):
         return deepcopy(self)
@@ -141,6 +150,9 @@ class Projector:
         """Compute the screen coordinate of a point
         """
         k = -self.hs / (r @ self.h0)
+        if k >= 0:
+            # behind the camera
+            return arr([-10, -10]) * self.zoom 
         a = -k * (r @ self.h1)
         b = -k * (r @ self.h2)
         return np.array([a, b]) * self.zoom
@@ -164,12 +176,41 @@ class Projector:
 
         return br.clone()
     
+class Sample:
+    """A sample trajectory
+    """
+    def __init__(self, frames:int = None) -> None:
+        """
+        Args:
+            frames: the number of frames in this sample. If None,
+                will allow for flexible # of frames
+        """
+        self.frames = [] if frames is None else [0] * frames
+        self.cnt = 0
+        pass
+
+    def __str__(self) -> str:
+        s = ""
+        for i in self.frames:
+            s += str(np.round(i, 3)) + "\n"
+        return s
+
+    def add(self, ob: Object, br: Blob) -> None:
+        if self.cnt < len(self.frames):
+            self.frames[self.cnt] = np.concatenate(
+                (ob.r, ob.v, ob.a, br.ct, br.bbox)
+            )
+        else:
+            self.frames.append(np.concatenate(
+                (ob.r, ob.v, ob.a, br.ct, br.bbox)
+            ))
+        self.cnt += 1
 
 class CaseGenerator:
     """Generating trajectories
     """
     def __init__(self) -> None:
-        self.p = p = Projector(
+        self.pj = p = Projector(
             h0 = arr([1, 0, 0], dtype = float),
             h1 = arr([0, 1, 0], dtype = float),
             hs = 0.2)
@@ -180,20 +221,161 @@ class CaseGenerator:
         self.dt = 0.03  # time interval, in sec
         self.num = 300  # number of frames to simulate
 
-    def config(self, slow_range : float, curve_range: float,
-               v_range:tuple) -> None:
-        """Parameters:
-        slow_range: the max slow_down
-        curve_range: curve in (-curve_range, +curve_range)
+    def config(self, slow_range : float = None, 
+               curve_range: float = None,
+               r_range: tuple = None, 
+               v_range: tuple = None, 
+               gravity: float = 10,
+               ground: float = -1.5,
+               disturb: float = 0.1) -> None:
         """
+        Args:
+            slow_range: the max slow_down, slow factor is in (0, slow_range)
+            curve_range: curve in (-curve_range, +curve_range)
+            r_range: ( (r0_min, r0_max), (r1_min, r1_max), (r2_min, r2_max))
+                Range of location in h0, h1, h2 directions
+            v_range: ( (v0_min, v0_max), (v1_min, v1_max), (v2_min, v2_max))
+                range of velocity in h0, h1 and h2 directions
+            gravity: the value of the gravitational constant
+            ground: the location of the ground wrt to the camera
+            disturb: the random disturb to its acceleration, i.e. the acceleration 
+                will become a*(1-d), where d is a uniform random value in 
+                (-distrub, disturb)
+        """
+        if slow_range is not None:
+            self.slow_range = (0, slow_range)
+    
+        if curve_range is not None:
+            self.curve_range = (-curve_range * self.dt, curve_range * self.dt)
 
-    def addObject(self, name:str, r, v, size: float = 0.22):
+        if v_range is not None:
+            self.v_range = v_range
+
+        if r_range is not None:
+            self.r_range = r_range
+    
+        self.gravity = gravity
+        self.ground = ground
+        self.disturb = (-disturb, disturb)
+        
+    def gen(self, num = 300, file:str = None)->list:
+        """Generate tajectories
+        Args:
+            file: the file name. If not None, the generated
+                data will be saved to the file
+        Returns:
+            the generated data
+        """
+        pall = []   # list of 2D array
+        for j, t in enumerate(self.ts):
+            sm = Sample(num)
+            for i in range(num):
+                t.move(self.dt)
+                br = self.pj.toScreen(t)
+                sm.add(t, br)
+
+                t.acc(slow = self.slows[j],
+                    curve = self.curves[j],
+                    disturb = self.disturb,
+                    gravity = self.gravity)
+                t.reflected()
+            pall.append(np.round(sm.frames, 3))
+
+        if file is not None:
+            self.write(file, pall)
+        return pall
+
+
+    def addRandomObjects(self, cases: int):
+        """Add random objects according to config
+        Args:
+            cases: the number of objects to be added
+        """
+        for i in range(cases):
+            r, v = [0, 0, 0], [0, 0, 0]
+            for j, rg in enumerate(self.r_range):
+                r[j] = random.uniform(rg[0], rg[1])
+            for j, vg in enumerate(self.v_range):
+                v[j] = random.uniform(vg[0], vg[1])
+            slow = random.uniform(*self.slow_range)
+            curve = random.uniform(*self.curve_range)
+            self.addObject("ball" + str(i+1),
+                           r, v, slow, curve)
+
+
+    def addObject(self, name:str, r, v,
+                slow: float = 0,
+                curve: float = 0,
+                size: float = 0.22):
         self.ts.append(Object(name, size, 
                          r = arr(r, dtype = float),
                          v = arr(v, dtype = float))
         )
+        self.curves.append(curve)
+        self.slows.append(slow) 
 
-    
+    def write(self, file:str, pall):
+        clean = lambda x : x.replace("[", "").replace("]", "").strip()
+        fp = open(file, "w")
+        for i in range(len(pall)):
+            # comment: name, slow, curve, disturb0, disturb1, number
+            s = [self.ts[i].name, 
+                 np.round(self.slows[i], 2), 
+                 np.round(self.curves[i], 2),
+                 np.round(self.disturb[0], 2),
+                 np.round(self.disturb[1], 2),
+                 self.num]
+            fp.write("# " + ", ".join([str(x) for x in s]) + "\n")
+            for x in pall[i]:
+                s = np.array2string(x, separator=", ", 
+                                    max_line_width = 1000,
+                                    formatter={'float_kind': lambda x: f"{x:.3f}"})
+                #fp.write(s + "\n")
+                fp.write(clean(s) + "\n")
+        fp.close()
+
+    @staticmethod
+    def read(file):
+        """Read all cases from a file
+        Returns:
+            palls: list of 2D arrays,
+                each 2D array, [num, 15], is a case
+        """
+        palls, pall = [], []
+        cnt = 0
+        fp = open(file)
+        text = fp.read()
+        fp.close()
+        lst = text.split("\n")
+
+        for s in lst:
+            s = s.strip()
+            if not s:
+                continue
+            if s.startswith("#"):
+                if len(pall) > 0:
+                    palls.append(pall)
+                    
+                # comment line
+                a = s[1:].split(",")
+                name = a[0] 
+                slow, curve, turb0, turb1 = [float(x) for x in a[1:5]]
+                num = int(a[5])
+                pall = np.zeros([num, 15])
+                cnt = 0
+            else:
+                # data
+                a = s.split(",")
+                y = [float(x) for x in a]
+                pall[cnt, :] = arr(y)
+                cnt += 1
+        
+        if len(pall) > 0:
+            palls.append(pall)
+        return palls
+
+
+
 
 
 
