@@ -6,3 +6,7 @@ Suppose we already have a model to detect one or more classes of objects in a gi
 
 ### Pinhole camera model
 Denote the position of an object by $(x,y,z)$ 
+
+## Ref:
+
+- https://viso.ai/deep-learning/object-tracking/

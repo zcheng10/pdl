@@ -65,6 +65,17 @@ pall_xrange = (np.min(pall[:, :, 0]), np.max(pall[:, :, 0]))
 pall_yrange = (np.min(pall[:, :, 1]), np.max(pall[:, :, 1]))
 pall_zrange = (np.min(pall[:, :, 2]), np.max(pall[:, :, 2]))
 
+print("px_range =", px_range)
+print("py_range =", py_range)
+
+if False:
+    print(px)
+    plt.figure()
+    plt.plot(px[0,:], py[0,:])
+    plt.plot(px[1,:], py[1,:])
+    plt.show()
+    exit()
+
 if anim3D:
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

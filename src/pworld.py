@@ -324,7 +324,7 @@ class CaseGenerator:
                  np.round(self.curves[i], 2),
                  np.round(self.disturb[0], 2),
                  np.round(self.disturb[1], 2),
-                 self.num]
+                 len(pall[0])]
             fp.write("# " + ", ".join([str(x) for x in s]) + "\n")
             for x in pall[i]:
                 s = np.array2string(x, separator=", ", 
@@ -366,9 +366,10 @@ class CaseGenerator:
             else:
                 # data
                 a = s.split(",")
-                y = [float(x) for x in a]
-                pall[cnt, :] = arr(y)
-                cnt += 1
+                if len(a) == 15:
+                    y = [float(x) for x in a]
+                    pall[cnt, :] = arr(y)
+                    cnt += 1
         
         if len(pall) > 0:
             palls.append(pall)

@@ -36,7 +36,7 @@ def test_case(pa: np.array, seq:int = 8,
     toFile = (file is not None)
     pb = np.zeros([num, 15])
 
-    for i in range(0, num - seq - predictions): 
+    for i in range(0, num - seq - predictions + 1): 
         input = pa[i:(i+seq), 11:15].tolist()
         input = torch.tensor(input, requires_grad=False)
 

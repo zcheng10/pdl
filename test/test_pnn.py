@@ -5,6 +5,7 @@ sys.path.append("../")
 from src.pworld import *
 from src.pnn import *
 from src.illustrate import *
+from src.track import *
 
 nround = lambda x : np.round(x, 2)
 
@@ -184,3 +185,19 @@ class TestBasic(unittest.TestCase):
     def test_done(self):
         # plt.show()
         pass
+
+
+class TestVideo(unittest.TestCase):
+    def test_feeder1(self):
+        To_Compact = False
+        print("video feeding ...")
+        fd = Feeder("ext.webm", max_frames = None if To_Compact else 3)
+        print("fd =", fd.marked)
+
+        if To_Compact:
+            fd.compact("ext_clip")
+
+    def test_feeder2(self):
+        file = "ext_clip_0.mp4"
+        fd = Feeder(file, ref_path="")
+        fd.playWithAnnotation(outfile = "")

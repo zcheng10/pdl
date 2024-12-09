@@ -213,6 +213,7 @@ class MotionSolver:
               guess: torch.tensor = None,
               predictions: int = 4,
               epochs: int = 100,
+              err_tol = 1.0,
               verbose: bool = False):
         """Solve for pose
         Args:
@@ -224,6 +225,7 @@ class MotionSolver:
             guess: the starting value of (r, v, a, sz)
             predictions: the number of predictions to make
             epochs: the number of epochs for the solution
+            err_tol: when loss < err_rol, stop solving
             
         Returns:
             pose: the estimated pose, [10]
@@ -264,6 +266,9 @@ class MotionSolver:
 
             # Calculate loss
             loss = mse_loss(y, tgt)
+
+            if loss.item() < err_tol:
+                break;
 
             # Compute gradients
             loss.backward()
