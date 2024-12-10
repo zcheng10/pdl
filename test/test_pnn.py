@@ -200,4 +200,5 @@ class TestVideo(unittest.TestCase):
     def test_feeder2(self):
         file = "ext_clip_0.mp4"
         fd = Feeder(file, ref_path="")
+        fd.predict()
         fd.playWithAnnotation(outfile = "")

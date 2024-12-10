@@ -179,22 +179,6 @@ class ProjectorNN(nn.Module):
         return y
     
 
-class ActionNN (nn.Module):
-    """Moving an object for N times and output the N
-        states [N, 15]
-    """
-    def __init__(self, N: int, dt:float = 0.03) -> None:
-        super(ActionNN, self).__init__()
-        layers = []
-        for _ in range(N):
-            layers.append(MotionNN.moved)
-        self.model = nn.Sequential(*layers)
-
-    def forward(self, x):
-        """
-        """
-
-
 class MotionSolver:
     """Given a sequence of bbox, find (r, v, a), and predict 
     the next location

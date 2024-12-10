@@ -8,6 +8,8 @@ from ultralytics import YOLO
 
 from src.pnn import *
 
+nround = lambda x : np.round(x, 2)
+
 CLASS_BALL = 32
 
 class Watcher:
@@ -27,14 +29,16 @@ class Watcher:
         """Find the bounding boxes in these images
 
         Returns:
-            The list of boxes, for each image, ther
+            The list of boxes, for each image, there may be more than
+            1 boxes
         """
         lbox = []
         for f in imgs:
             results = self.model.predict(f, 
                     classes = [CLASS_BALL], verbose = False)
             for r in results:
-                bb = r.boxes.xywh
+                bb = r.boxes.xyxy
+                # r.boxes.xywh: xy is center
                 lbox.append(bb)
                 # if bb.shape[0] == 0:
                 #     print("No", end = ".. ")
@@ -63,7 +67,7 @@ class Feeder:
     """
     def __init__(self, video_path, max_frames = None, 
                  ref_path = None, verbose = False) -> None:
-        """Extact bboxes of sports balls from this viedoe
+        """Extract bboxes of sports balls from this viedoe
         """
         # video_path = "test/ext.webm"
         cap = cv2.VideoCapture(video_path)
@@ -75,12 +79,14 @@ class Feeder:
             max_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
         self.marked = dict()
+        self.predicted = dict()
 
         if ref_path is not None:
             # -- read marked from the file
             if ref_path == "":
                 ref_path = Feeder.defaultRefName(video_path)
             self.marked = Feeder.loadBoxes(ref_path)
+            self.filterBoxes()
             return
 
         cnt = 0
@@ -105,9 +111,54 @@ class Feeder:
         ref_file = Feeder.defaultRefName(video_path)
         Feeder.saveBoxed(self.marked, ref_file)
 
+    def predict(self, seq: int = 8, verbose: bool = False):
+        """Use a sequence to prdict the next one
+        """
+        mk = sorted(list(self.marked.keys()))
+        obs = [[c, self.marked[c]] for c in mk]
+        m = MotionSolver()
+        pose = None
+        predictions = 1
+
+        # -- start prediction
+        num, i = len(obs), seq
+        while i <= num:
+            # input [i - seq, i), a tensor [seq, 4]
+            input = [obs[j][1].flatten().tolist() for j in range(i-seq, i)]
+            input = torch.tensor(input, requires_grad=False)
+
+            pose, next_states, next_poses = m.solve(input, guess=pose, 
+                        predictions=predictions)
+            n_states = next_states.reshape([predictions, 4])
+
+            if verbose:
+                print(i, "=> Estimated state =", 
+                    nround(pose.detach().numpy()))
+                print("     Next states: ", 
+                    nround(next_states.detach().numpy()))
+            
+            
+            fn = obs[i-1][0] + 1
+            self.predicted[fn] = n_states
+            print("predict ", fn, n_states)
+
+            if (i < num) and (fn < obs[i][0]):
+                obs.insert(i, [fn, n_states])
+                num = len(obs)
+           
+            i += 1
+
 
     def playWithAnnotation(self, winTitle = None, outfile = None):
-        """ Show the video with annotated bbox
+        """Show the video with annotated bbox
+
+        Args:
+            winTitle: the window to show images. If None, images will
+                not show
+
+            outfile: if not None, output the annotated frames to
+                the video file. If empty (""), use the default
+                video file name ("*_boxed.mp4")
         """
         cap = cv2.VideoCapture(self.video)
         if not cap.isOpened():
@@ -139,6 +190,11 @@ class Feeder:
                     bbox = self.marked[cnt].detach().numpy()
                     bbox = bbox.astype("int")
                     Feeder.annotate(frame, bbox)
+
+                if cnt in self.predicted:
+                    bbox = self.predicted[cnt].detach().numpy()
+                    bbox = bbox.astype("int")
+                    Feeder.annotate(frame, bbox, color = (0, 255, 0))
                 
                 if toWrite:
                     out.write(frame)
@@ -222,15 +278,59 @@ class Feeder:
             
         cap.release()
        
+    def filterBoxes(self) -> None:
+        """Sometimes a frame has 2 or more boxes, need to keep only 1. This is done
+          by comparing with the neighboring frames
+        """
+        mk = sorted(list(self.marked.keys()))
+        seq = [ [c, self.marked[c]] for c in mk]
+        num = len(seq)
+        for i in range(num):
+            if seq[i][1].shape[0] == 1:
+                continue
+            # -- check with i - 1
+            if i > 0 and seq[i-1][1].shape[0] == 1:
+                k = Feeder.minDistance(seq[i][1], seq[i-1][1])
+                seq[i][1] = seq[i][1][k, :].unsqueeze(0)
+                continue
+
+            # -- check with i + 1
+            if i < num - 1 and seq[i+1][1].shape[0] == 1:
+                k = Feeder.minDistance(seq[i][1], seq[i+1][1])
+                seq[i][1] = seq[i][1][k, :].unsqueeze(0)
+                # print("filter", seq[i][0], "->", seq[i][1])
+            
+        self.marked.clear()
+        cnt = 0
+        for s in seq:
+            if s[1].shape[0] > 1:
+                cnt += 1
+            else:
+                self.marked[s[0]] = s[1]
+            
+        print("after filtering, still", cnt, "frames contain >= 2 boxes")
+        # print(self.marked)
+
+
+    @staticmethod
+    def minDistance(t1: torch.tensor, t2:torch.tensor) -> int:
+        """t1 shape [k, 4], t2 shape [1, 4], find which
+        0<= p < k, t1[p, :] is closest to t2 
+        """
+        a = t1 - t2
+        b = torch.sum(a**2, axis = 1)
+        return torch.topk(-b, 1).indices.item()
+
     @staticmethod
     def annotate(img, boxes, color = (0, 0, 255)):
         """Add bboxes to the image
         """
         for i in range(boxes.shape[0]):
-            w, h = int(boxes[i][2]/2), int(boxes[i][3]/2)
-            pt1 = (boxes[i][0] - w, boxes[i][1] - h)
-            pt2 = (boxes[i][0] + w, boxes[i][1] + h )
-            # print("pt1, pt2 =", pt1, pt2)
+            # w, h = int(boxes[i][2]/2), int(boxes[i][3]/2)
+            # pt1 = (boxes[i][0] - w, boxes[i][1] - h)
+            # pt2 = (boxes[i][0] + w, boxes[i][1] + h )
+            pt1 = (boxes[i][0], boxes[i][1])
+            pt2 = (boxes[i][2], boxes[i][3])
             cv2.rectangle(img, pt1, pt2, color = color)
 
 
