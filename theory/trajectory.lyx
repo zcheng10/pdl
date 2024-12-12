@@ -57,10 +57,10 @@
 \shortcut idx
 \color #008000
 \end_index
-\leftmargin 1.5in
-\topmargin 1.5in
-\rightmargin 1.5in
-\bottommargin 1.5in
+\leftmargin 1.25in
+\topmargin 1.25in
+\rightmargin 1.25in
+\bottommargin 1.25in
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -91,7 +91,21 @@ Pinhole camera model
 
 \begin_layout Standard
 The most common imaging model used in computer vision is the pinhole camera
- model, which is illustrated in Fig.
+ model
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+David A.
+ Forsyth and Jean Ponce (2003).
+ Computer Vision, A Modern Approach.
+ Prentice Hall.
+ ISBN 0-12-379777-2.
+\end_layout
+
+\end_inset
+
+, which is illustrated in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -164,12 +178,12 @@ Without loss of generality, suppose the pinhole is located at
 \begin_inset Formula $\vec{v}=\left(v_{x},v_{y},v_{z}\right)$
 \end_inset
 
-, its acceleration by 
+, and its acceleration by 
 \begin_inset Formula $\vec{a}=\left(a_{x},a_{y},a_{z}\right)$
 \end_inset
 
 .
- The screen, on which the image is captured, is located at a vector 
+ The screen on which the image is captured is located at a vector 
 \begin_inset Formula $\vec{h_{s}}=h_{s}\hat{h_{0}}$
 \end_inset
 
@@ -228,7 +242,7 @@ Then the projection of
 \begin_inset Formula $\vec{r}$
 \end_inset
 
- on the screen,which is the image of the object, 
+ on the screen, which is the image of the object, 
 \begin_inset Formula $\vec{p}=\left(a,b\right)$
 \end_inset
 
@@ -244,7 +258,7 @@ where
 \begin_inset Formula $k$
 \end_inset
 
- is the distance of the object from the pinhole, 
+ is the distance of the object from the pinhole and 
 \begin_inset Formula $a$
 \end_inset
 
@@ -306,7 +320,7 @@ as the inverse camera matrix.
 \begin_inset Formula $k$
 \end_inset
 
- from the pinhole, is given by
+ from the pinhole, are given by
 \begin_inset Formula 
 \begin{equation}
 \underline{\left(\begin{array}{c}
@@ -326,7 +340,7 @@ The characteristics of the screen coordinate system
 \end_layout
 
 \begin_layout Standard
-The world coordinates is denoted by 
+The world coordinates are denoted by 
 \begin_inset Formula $\left(\hat{x},\hat{y},\hat{z}\right)$
 \end_inset
 
@@ -334,20 +348,19 @@ The world coordinates is denoted by
 \begin_inset Formula $\hat{z}$
 \end_inset
 
- is the upward vertical direction and 
+ is the upward direction and 
 \begin_inset Formula $\left(\hat{x},\hat{y}\right)$
 \end_inset
 
  spans the ground.
- In the real world, usually not only do the objects move, but also the camera
- moves simultaneously.
- So 
+ In the real world situations that we hope to analyze, not only do the objects
+ move, but the camera also moves simultaneously.
+ Therefore, 
 \begin_inset Formula $<\hat{h_{0}},\hat{h_{1}},\hat{h_{2}}>$
 \end_inset
 
  translates and rotates around the pinhole, and the pinhole also moves.
- In typical scenarios, the camera stands vertically.
- So 
+ In typical scenarios, the camera stands vertically, so 
 \begin_inset Formula $\vec{h_{2}}$
 \end_inset
 
@@ -359,7 +372,7 @@ The world coordinates is denoted by
  Then 
 \begin_inset Formula 
 \begin{equation}
-\hat{h_{2}}.\hat{z}=\cos\theta\approx1
+\hat{h_{2}}\cdot\hat{z}=\cos\theta\approx1
 \end{equation}
 
 \end_inset
@@ -392,17 +405,17 @@ k\vec{r}+h_{s}\hat{h_{0}}+a\vec{h_{1}}+b\vec{h_{2}}=0
 \end_inset
 
 Multiplying the equation by 
-\begin_inset Formula $\hat{h_{i}},$
+\begin_inset Formula $\hat{h_{i}}$
 \end_inset
 
-
+ for 
 \begin_inset Formula $i=0,1,2$
 \end_inset
 
-, utilizing the property 
+, noting that 
 \begin_inset Formula 
 \[
-\hat{h}_{i}.\hat{h}_{j}=\begin{cases}
+\hat{h}_{i}\cdot\hat{h}_{j}=\begin{cases}
 0 & i\ne j\\
 1 & i=j
 \end{cases}
@@ -410,10 +423,10 @@ Multiplying the equation by
 
 \end_inset
 
-Then 
+We get 
 \begin_inset Formula 
 \[
-k\left(\vec{r}.\hat{h_{0}}\right)=-h_{s}
+k\left(\vec{r}\cdot h\right)=-h_{s}
 \]
 
 \end_inset
@@ -421,7 +434,7 @@ k\left(\vec{r}.\hat{h_{0}}\right)=-h_{s}
 
 \begin_inset Formula 
 \[
-k\left(\vec{r}.\hat{h_{1}}\right)+a=0
+k\left(\vec{r}\cdot\hat{h_{1}}\right)+a=0
 \]
 
 \end_inset
@@ -429,7 +442,7 @@ k\left(\vec{r}.\hat{h_{1}}\right)+a=0
 
 \begin_inset Formula 
 \[
-k\left(\vec{r}.\hat{h_{2}}\right)+b=0
+k\left(\vec{r}\cdot h_{2}\right)+b=0
 \]
 
 \end_inset
@@ -437,7 +450,7 @@ k\left(\vec{r}.\hat{h_{2}}\right)+b=0
 Therefore
 \begin_inset Formula 
 \begin{equation}
-\underline{k=-\frac{h_{s}}{\vec{r}.\hat{h_{0}}}},\hspace{1em}a=-k\left(\vec{r}.\hat{h_{1}}\right)=\underline{h_{s}\frac{\vec{r}.\hat{h_{1}}}{\vec{r}.\hat{h_{0}}}},\hspace{1em}b=\underline{h_{s}\frac{\vec{r}.\hat{h_{2}}}{\vec{r}.\hat{h_{0}}}}\label{eq:proj-solution}
+\underline{k=-\frac{h_{s}}{\vec{r}\cdot h}},\hspace{1em}a=-k\left(\vec{r}\cdot h\right)=\underline{h_{s}\frac{\vec{r}\cdot\hat{h_{1}}}{\vec{r}\cdot h}},\hspace{1em}b=\underline{h_{s}\frac{\vec{r}\cdot\hat{h_{2}}}{\vec{r}\cdot\hat{h_{0}}}}\label{eq:proj-solution}
 \end{equation}
 
 \end_inset
@@ -449,11 +462,11 @@ The image is at
  on the capturing device, typically a CCD or CMOS image sensor.
  Note that the final image shown in an video will be translated and zoomed
  according to the frame configuration.
- So the final location of the pixel is 
+ The final location of the pixel is 
 \begin_inset Formula 
-\[
-\left(a',b'\right)=\left(c_{x},c_{y}\right)+m\left(a,b\right)
-\]
+\begin{equation}
+\left(a',b'\right)=\left(c_{x},c_{y}\right)+M\left(a,b\right)\label{eq:screen-zoom}
+\end{equation}
 
 \end_inset
 
@@ -461,8 +474,8 @@ where
 \begin_inset Formula $\left(c_{x},c_{y}\right)$
 \end_inset
 
- are the offset of the image sensor center to the video center, 
-\begin_inset Formula $m$
+ are the offset of the image sensor center to the video center and 
+\begin_inset Formula $M$
 \end_inset
 
  is the zoom factor.
@@ -478,7 +491,7 @@ this object is out of the FOV (field-of-view) and not on the screen.
 
 \begin_layout Standard
 Similarly, if 
-\begin_inset Formula $\vec{r}.\hat{h}_{0}<0$
+\begin_inset Formula $\vec{r}\cdot\hat{h}_{0}<0$
 \end_inset
 
 , the object is 
@@ -489,7 +502,7 @@ behind
 \begin_inset Quotes erd
 \end_inset
 
- the camera, and can not form an image.
+ the camera and cannot form an image.
 \end_layout
 
 \begin_layout Subsection
@@ -497,20 +510,19 @@ The bounding box of an object
 \end_layout
 
 \begin_layout Standard
-Asusming its diameter is 
+Assuming the object's diameter is 
 \begin_inset Formula $D$
 \end_inset
 
-.
- Then the whole shape can be approximated by a box whose vertexes are given
+, the whole shape can be approximated by a box whose vertices are given
  by
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\vec{r_{i}}=\vec{r}+\left(\pm\frac{D}{2},\pm\frac{D}{2},\pm\frac{D}{2}\right)
-\]
+\begin{equation}
+\vec{r_{i}}=\vec{r}+\left(\pm\frac{D}{2},\pm\frac{D}{2},\pm\frac{D}{2}\right)\label{eq:object-bbox}
+\end{equation}
 
 \end_inset
 
@@ -524,7 +536,7 @@ where
 \end_inset
 
 , its projection on the camera screen is 
-\begin_inset Formula $\vec{p}_{i}$
+\begin_inset Formula $\vec{p}_{i}=\left(a'_{i},b'_{i}\right)$
 \end_inset
 
 , also obtained by Eq.
@@ -542,13 +554,13 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-Then the bounding box of the object's image is the range of the 8 projections:
+Thus, the bounding box of the object's image is the range of the 8 projections:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-ll_{x}=\min(p_{i}(x)),\hspace{1em}ll_{y}=\min(p_{i}(y))
+ll_{x}=\min(a'_{i}),\hspace{1em}ll_{y}=\min(b'_{i}),\hspace{1em}1\le i\le8\label{eq:image-bbox-ll}
 \end{equation}
 
 \end_inset
@@ -559,7 +571,7 @@ ll_{x}=\min(p_{i}(x)),\hspace{1em}ll_{y}=\min(p_{i}(y))
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-ur_{x}=\max(p_{i}(x)),\hspace{1em}ur_{y}=\max(p_{i}(y))
+ur_{x}=\max(a'_{i}),\hspace{1em}ur_{y}=\max(b'_{i}),\hspace{1em}1\le i\le8\label{eq:image-bbox-ur}
 \end{equation}
 
 \end_inset
@@ -572,7 +584,27 @@ where
 \begin_inset Formula $ur$
 \end_inset
 
- mean lower-left and upper-right corner, respectively.
+ denote the lower-left and upper-right corner, respectively.
+ For the sake of simplicity, denote the bounding box of the object's image
+ by
+\begin_inset Formula 
+\begin{equation}
+\vec{B}=\left(\begin{array}{c}
+ll_{x}\\
+ll_{y}\\
+ur_{x}\\
+ur_{y}
+\end{array}\right)=\left(\begin{array}{c}
+\min a'_{i}\\
+\min b'_{i}\\
+\max a'_{i}\\
+\max b'_{i}
+\end{array}\right)\label{eq:bbox-final}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -580,83 +612,52 @@ Motion model
 \end_layout
 
 \begin_layout Standard
-In a short time 
+Denote the state of an object at the time 
+\begin_inset Formula $t$
+\end_inset
+
+ by 
+\begin_inset Formula 
+\begin{equation}
+\vec{s}\left(t\right)=\left(\begin{array}{c}
+\vec{r}\\
+\vec{v}\\
+\vec{a}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+Then after a short time 
 \begin_inset Formula $\Delta t$
 \end_inset
 
-, all three frameworks could move and rotate.
-\end_layout
-
-\begin_layout Enumerate
-The object moves to 
-\begin_inset Formula $\vec{r}+\vec{v}\Delta t$
-\end_inset
-
-, 
-\end_layout
-
-\begin_layout Enumerate
-The pinhole moves to 
-\begin_inset Formula $\left(0,0,0\right)+\vec{u}\Delta t$
-\end_inset
-
-.
- We can safely assume 
-\begin_inset Formula $\vec{u}$
-\end_inset
-
- is very small, 
-\begin_inset Formula $\vec{u}\approx0$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Enumerate
-The screen rotates from 
-\begin_inset Formula $T$
-\end_inset
-
- to 
-\begin_inset Formula $T.\Delta T$
-\end_inset
-
-, where 
-\begin_inset Formula $\Delta T$
-\end_inset
-
- is a 
-\begin_inset Quotes eld
-\end_inset
-
-small
-\begin_inset Quotes erd
-\end_inset
-
- orthonormal matrix
-\end_layout
-
-\begin_layout Standard
-then its projection on the screen is given by
-\end_layout
-
-\begin_layout Standard
+, its state becomes
 \begin_inset Formula 
-\[
-\left(\hat{h_{1}},\hat{h_{2}},\vec{r}+\left(\vec{v}-\vec{u}\right)\Delta t\right)\left(\begin{array}{c}
-a+\Delta a\\
-b+\Delta b\\
-k+\Delta k
-\end{array}\right)=-h_{s}\hat{h_{0}}
-\]
+\begin{equation}
+\vec{s}\left(t+\Delta t\right)=\left(\begin{array}{c}
+\vec{r}+\vec{v}\Delta t+\frac{1}{2}\vec{a}\left(\Delta t\right)^{2}\\
+\vec{v}+\vec{a}\Delta t\\
+\vec{a}+\Delta\vec{a}
+\end{array}\right)
+\end{equation}
 
 \end_inset
 
+The bounding box of its image changes to 
+\begin_inset Formula 
+\begin{equation}
+\vec{B}\left(t\right)=f\left(\vec{r}\right)\rightarrow\vec{B}\left(t+\Delta t\right)=f\left(\vec{r}+\vec{v}\Delta t+\frac{1}{2}\vec{a}\left(\Delta t\right)^{2}\right)\label{eq:bbox-change}
+\end{equation}
 
-\end_layout
+\end_inset
 
-\begin_layout Standard
-According to Eq.
+where 
+\begin_inset Formula $f\left(.\right)$
+\end_inset
+
+ is the operator that maps the 3D location of an object to the bounding
+ box of its image, described by Eq.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -667,133 +668,121 @@ noprefix "false"
 
 \end_inset
 
-), the new projection point is
-\begin_inset Formula 
-\begin{equation}
-a+\Delta a=h_{s}\frac{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{1}}+\Delta\hat{h_{1}}\right)}{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{0}}+\Delta\hat{h_{0}}\right)}
-\end{equation}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{equation}
-b+\Delta b=h_{s}\frac{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{2}}+\Delta\hat{h_{2}}\right)}{\left(\vec{r}+\Delta\vec{r}\right).\left(\hat{h_{0}}+\Delta\hat{h_{0}}\right)}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Let 
-\begin_inset Formula $\Delta t\rightarrow0$
-\end_inset
-
-, the velocities of 
-\begin_inset Formula $a$
-\end_inset
-
-, 
-\begin_inset Formula $b$
-\end_inset
-
- are given by
-\begin_inset Formula 
-\begin{equation}
-\frac{da}{dt}=h_{s}\frac{\left(\vec{r}'.\hat{h_{1}}+\vec{r}.\hat{h_{1}'}\right)\left(\vec{r}.\hat{h_{0}}\right)-\left(\vec{r}.\hat{h_{1}}\right).\left(\vec{r}'.\hat{h_{0}}+\vec{r}.\hat{h_{0}'}\right)}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}=h_{s}\frac{U}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}
-\end{equation}
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}+\vec{r}.\hat{h_{1}'}\right)\hat{h_{0}}-\left(\vec{r}'.\hat{h_{0}}+\vec{r}.\hat{h_{0}'}\right).\hat{h_{1}}\right]
-\]
-
-\end_inset
-
-If we simply let 
-\begin_inset Formula $\hat{h_{1}'}=\hat{h_{0}'}=0$
-\end_inset
-
-, i.e, the screen and the pinhole do not move, then
-\begin_inset Formula 
-\[
-U=\vec{r}.\left[\left(\vec{r}'.\hat{h_{1}}\right)\hat{h_{0}}-\left(\vec{r}'.\hat{h_{0}}\right)\hat{h_{1}}\right]
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{equation}
-U=\vec{r}.\left[\left(\vec{v}.\hat{h_{1}}\right)\hat{h_{0}}-\left(\vec{v}.\hat{h_{0}}\right)\hat{h_{1}}\right]\label{eq:change-of-screen-coordinate}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Recall the 
-\emph on
-vector triple product
-\emph default
- identity, 
-\begin_inset Formula $\vec{a}\times\left(\vec{b}\times\vec{c}\right)=\left(\vec{a}.\vec{c}\right)\vec{b}-\left(\vec{a}.\vec{b}\right)\vec{c}$
-\end_inset
-
-, then (
+) - (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:change-of-screen-coordinate"
+reference "eq:bbox-final"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
-) becomes
-\begin_inset Formula 
-\begin{equation}
-U=\vec{r}.\left(\vec{v}\times\left(\vec{h_{0}}\times\vec{h_{1}}\right)\right)=\vec{r}.\left(\vec{v}\times\vec{h_{2}}\right)
-\end{equation}
+).
+\end_layout
+
+\begin_layout Section
+Trajectory prediction
+\end_layout
+
+\begin_layout Standard
+Given a sequence of image frames captured by a video camera, we must predict
+ the trajectory of an object.
+ As human or animals do, we first need to locate the object in these frames
+ and then predict its next location based on its current trajectory.
+ Very often, we will need to use experience on how such objects typically
+ move.
+ 
+\end_layout
+
+\begin_layout Standard
+YOLO (You Only Look Once) is a real-time object detection and image segmentation
+ deep neural network (DNN) model, developed by Joseph Redmon and Ali Farhadi
+ at the University of Washington
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://docs.ultralytics.com/
+\end_layout
 
 \end_inset
 
+.
+ Since its launch in 2015, YOLO has gained popularity for its high speed
+ and accuracy.
+ The latest model version is YOLOv11.
+\begin_inset Foot
+status open
 
-\begin_inset Formula 
-\begin{equation}
-\underline{\frac{da}{dt}=h_{s}\frac{\vec{r}.\left(\vec{v}\times\vec{h_{2}}\right)}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}}
-\end{equation}
+\begin_layout Plain Layout
+https://huggingface.co/Ultralytics/YOLO11
+\end_layout
 
 \end_inset
 
+ This pre-trained model can detect 80 classes, on of which is 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_inset Formula 
-\begin{equation}
-\underline{\frac{db}{dt}=-h_{s}\frac{\vec{r}.\left(\vec{v}\times\vec{h_{1}}\right)}{\left(\vec{r}.\hat{h_{0}}\right)^{2}}}
-\end{equation}
+sports ball
+\begin_inset Quotes erd
+\end_inset
+
+ (class 32).
+ In this project, I use YOLOv11s to locate the bounding box of a soccer
+ ball, shown in Fig 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:The-red-box"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename frame1.jpg
+	lyxscale 30
+	scale 30
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-Note that
-\begin_inset Formula 
-\[
-\vec{A}.\left(\vec{B}\times\vec{C}\right)=\left(\vec{A},\vec{B},\vec{C}\right)=\left|\begin{array}{ccc}
-A_{x} & A_{y} & A_{z}\\
-B_{x} & B_{y} & B_{z}\\
-C_{x} & C_{y} & C_{z}
-\end{array}\right|
-\]
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-red-box"
+
+\end_inset
+
+The red box is the bounding box of the soccer ball
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -801,154 +790,128 @@ C_{x} & C_{y} & C_{z}
 \end_layout
 
 \begin_layout Subsection
-Network
+Assumptions
 \end_layout
 
-\begin_layout Enumerate
-Yolo: gives the bounding box of the ball in a frame, 
-\begin_inset Formula $\left(a_{1},b_{1}\right)$
-\end_inset
-
-, 
-\begin_inset Formula $\left(a_{2},b_{2}\right)$
-\end_inset
-
-, denoted by
+\begin_layout Standard
+As a first-order approximation, assume that the video camera does not move,
+ and that it is perfectly aligned with the world coordinate system.
+ That is 
 \begin_inset Formula 
 \[
-B=\left(\begin{array}{cc}
-a_{1} & b_{1}\\
-a_{2} & b_{2}
-\end{array}\right)=\left(\begin{array}{c}
-a_{1}\\
-b_{1}\\
-a_{2}\\
-b_{2}
+\left(\hat{h}_{0},\hat{h}_{1},\hat{h}_{2}\right)=\left(\begin{array}{ccc}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
 \end{array}\right)
 \]
 
 \end_inset
 
+where the unit is meters.
+ The distance of the camera screen to the optimal center (pinhole) is 
+\begin_inset Formula $h_{s}=0.2$
+\end_inset
 
+ meters.
+ The camera offset and zoom in Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:screen-zoom"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) are taken as 
+\begin_inset Formula 
+\[
+\left(c_{x},c_{y}\right)=\left(0,0\right)\hspace{1em}M=1000
+\]
+
+\end_inset
+
+These numbers are rather arbitrary, but as shown later, they have little
+ effect on prediction accuracy.
 \end_layout
 
-\begin_layout Enumerate
-Physical network (PNN): 
+\begin_layout Subsection
+Algorithm
 \end_layout
 
-\begin_deeper
-\begin_layout Enumerate
-input: a series of bounding boxes in consecutive frames, 
-\begin_inset Formula $B_{1}$
+\begin_layout Standard
+Given 
+\begin_inset Formula $n+1$
 \end_inset
 
-, 
-\begin_inset Formula $B_{2}$
+ bounding boxes in the corresponding consecutive images, how do we predict
+ the bounding boxes in the next 
+\begin_inset Formula $m$
 \end_inset
 
-, ..., 
-\begin_inset Formula $B_{m}$
-\end_inset
-
+ image frames? The imaging process is illustrated in Fig.
  
-\end_layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:The-equivalent-neural"
+plural "false"
+caps "false"
+noprefix "false"
 
-\begin_layout Enumerate
-output: the predicted bounding boxes in the following frames, 
-\begin_inset Formula $B_{m+1}$
-\end_inset
-
-, ...,
-\begin_inset Formula $B_{m+L}$
-\end_inset
-
-, where 
-\begin_inset Formula $L$
-\end_inset
-
- is the prediction sequence length.
-\end_layout
-
-\begin_layout Enumerate
-intermediate variables (hidden variables): the position of the 
-\end_layout
-
-\end_deeper
-\begin_layout Section
-Appendix
-\end_layout
-
-\begin_layout Subsection
-Matrix op
-\end_layout
-
-\begin_layout Standard
-Let 
-\begin_inset Formula $A^{-1}$
-\end_inset
-
- be the inverse matrix of 
-\begin_inset Formula $A$
 \end_inset
 
 .
- Consider the inverse matrix of 
-\begin_inset Formula $A+dA$
-\end_inset
-
-, where 
-\begin_inset Formula $|dA|\ll|A|$
-\end_inset
-
-.
-\begin_inset Formula 
-\[
-A+dA=A(I+A^{-1}dA)
-\]
-
-\end_inset
-
-Let 
-\begin_inset Formula $dB=A^{-1}dA$
-\end_inset
-
-, then
-\begin_inset Formula 
-\[
-\left(I-dB\right)A^{-1}.A\left(I+dB\right)=\left(I-dB\right)\left(I+dB\right)=I-\left(dB\right)^{2}\approx I
-\]
-
-\end_inset
-
-Therefore 
-\begin_inset Formula 
-\[
-\left(A+dA\right)^{-1}\approx\boxed{A^{-1}-A^{-1}\left(dA\right)A^{-1}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Differential vectors
 \end_layout
 
 \begin_layout Standard
-For a dot product of two vectors 
-\begin_inset Formula $u=\vec{x}.\vec{y}$
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename pasted2.png
+	lyxscale 60
+	scale 60
+
 \end_inset
 
-, its derivative is
-\begin_inset Formula 
-\[
-\frac{du}{dt}=\frac{d}{dt}\left(\vec{x}.\vec{y}\right)=\frac{d\vec{x}}{dt}.\vec{y}+\vec{x}.\frac{d\vec{y}}{dt}
-\]
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-equivalent-neural"
+
+\end_inset
+
+The flow of video process, which is equivalent to a neural network
+\end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The steps of the video process 
 \end_layout
 
 \end_body
