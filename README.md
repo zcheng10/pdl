@@ -1,6 +1,6 @@
 A sample video showing predicting the trajectory of a soccer ball is here:
 
-<video src="https://github.com/zcheng10/pdl/blob/main/test/ext_clip_0_boxed.mp4"></video>
+<video src="test/ext_clip_0_boxed.mp4"></video>
 
 <video width="600" controls>
   <source src="test/ext_clip_0_boxed.mp4" type="video/mp4">
