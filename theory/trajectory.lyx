@@ -81,14 +81,26 @@
 
 \begin_body
 
+\begin_layout Title
+Object Tracking and Trajectory Prediction Using a Physics-based Neural Network
+\end_layout
+
+\begin_layout Author
+Zachary Cheng
+\end_layout
+
+\begin_layout Date
+December 2024
+\end_layout
+
 \begin_layout Section
 Introduction
 \end_layout
 
 \begin_layout Standard
-Object tracking is a pivotal technology in the realm of computer vision,
- gaining increasing importance due to its wide range of applications across
- various industries.
+Object tracking is an important topic in the realm of computer vision, gaining
+ increasing importance due to its wide range of applications across various
+ industries.
  This technology entails the automatic detection and monitoring of objects
  within a video sequence, interpreting their trajectories with high accuracy.
  The primary goal of object tracking is to maintain the identity of objects
@@ -100,7 +112,7 @@ Object tracking is a pivotal technology in the realm of computer vision,
  We trained and tested the model using a dataset of free kick videos, which
  provided diverse and challenging scenarios for tracking moving objects.
  Results suggest high accuracy comparable to the current powerful models
- available coupled with faster and more energy-efficient performance.
+ available as well as faster and more efficient performance.
  
 \end_layout
 
@@ -188,7 +200,7 @@ t changes in object appearance or background clutter.
 \end_layout
 
 \begin_layout Standard
-In contrast, modern approaches leverage deep learning techniques, offering
+In contrast, modern approaches employ deep learning techniques, offering
  enhanced accuracy and robustness.
  Convolutional Neural Networks (CNNs) have become the cornerstone of many
  state-of-the-art tracking algorithms.
@@ -883,7 +895,7 @@ The bounding box of its image changes to
 \end_inset
 
 where 
-\begin_inset Formula $f\left(.\right)$
+\begin_inset Formula $f$
 \end_inset
 
  is the operator that maps the 3D location of an object to the bounding
@@ -1103,7 +1115,7 @@ The time step between two consecutive video frames is
 \begin_inset Formula $\Delta t=0.03$
 \end_inset
 
- sec, corresponding about 30 frames per sec.
+ sec, corresponding to about 30 frames per sec.
 \end_layout
 
 \begin_layout Subsection
@@ -1129,18 +1141,18 @@ hidden states
 \begin_inset Quotes erd
 \end_inset
 
-) are the states, 
+) are the states 
 \begin_inset Formula $\vec{s}=\left(\vec{r},\vec{v},\vec{a}\right)$
 \end_inset
 
-, of the object.
+ of the object.
  If we can estimate the states, we can extrapolate the motion to the next
  several time steps.
 \end_layout
 
 \begin_layout Standard
 As an approximation, assume acceleration in this sequence is a constant.
- So all the states at 
+ Thus, all of the states at 
 \begin_inset Formula $t=0,\Delta t,2\Delta t,...,n\Delta t$
 \end_inset
 
@@ -1226,8 +1238,8 @@ noprefix "false"
 \end_inset
 
 ).
- Note that these equations are all differentiable, thus the process is equivalen
-t to a 2-layer neural network.
+ Note that these equations are all differentiable, thus, the process is
+ equivalent to a 2-layer neural network.
  The 1st layer maps 
 \begin_inset Formula $\vec{s}\left(t\right)$
 \end_inset
@@ -1250,7 +1262,7 @@ t to a 2-layer neural network.
 \end_inset
 
 .
- Then compare all 
+ Then, comparing all 
 \family roman
 \series medium
 \shape up
@@ -1283,7 +1295,7 @@ L=\sum_{i=0}^{n}||\vec{B}\left(t+i\Delta t\right)-\vec{C}\left(t+i\Delta t\right
 \end_layout
 
 \begin_layout Standard
-Then the problem is to find initial 
+Then the problem is to find the initial 
 \family roman
 \series medium
 \shape up
@@ -1300,7 +1312,7 @@ Then the problem is to find initial
 \begin_inset Formula $\vec{s}=\left(\vec{r},\vec{v},\vec{a}\right)$
 \end_inset
 
- to minimize 
+ that minimizez 
 \begin_inset Formula $L$
 \end_inset
 
@@ -1333,11 +1345,11 @@ Boyd, Stephen; Vandenberghe, Lieven (2004-03-08).
 
 \end_inset
 
- The key concept is based on the gradient vector of partial derivatives.
+ The key concept is based on the gradient vector.
  The loss function has a gradient vector:
 \begin_inset Formula 
 \begin{equation}
-\frac{\partial L}{\partial\vec{B}_{i}}=\left(\vec{B}\left(t+i\Delta t\right)-\vec{C}\left(t+i\Delta t\right)\right),\hspace{1em}i=0,1...,n
+\frac{\partial L}{\partial\vec{B}_{i}}\nabla L=\left(\vec{B}\left(t+i\Delta t\right)-\vec{C}\left(t+i\Delta t\right)\right),\hspace{1em}i=0,1...,n
 \end{equation}
 
 \end_inset
@@ -1442,7 +1454,7 @@ which indicates a local minimal.
 \color none
 Thanks to the rapid advances of deep learning (DL), there are plenty of
  mature and powerful frameworks to do GD.
- For this project, I chose PyTorch, the most popular open source DL platform
+ For this project, I chose PyTorch, the most popular open source DL platform,
  developed by Meta.
 \begin_inset Foot
 status open
@@ -1466,8 +1478,8 @@ https://pytorch.org/
 
 \end_inset
 
- Their website provides a nice tutorial on using PyTorch as an optimization
- tool: 
+ Their website provides a tutorial on using PyTorch as an optimization tool:
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1505,7 +1517,7 @@ noprefix "false"
 
 \end_inset
 
- is repeated for time step 
+ is repeated for time steps 
 \begin_inset Formula $n+1$
 \end_inset
 
@@ -1525,7 +1537,7 @@ Test of simulated motion
 \end_layout
 
 \begin_layout Standard
-To validate the prediction method, I generated simulated motions.
+To validate the prediction method, I generated some simulated motion.
  This is the simulation process:
 \end_layout
 
@@ -1539,7 +1551,7 @@ A ball has a location
 \end_inset
 
 , which are randomly generated.
- But 
+ Note that 
 \begin_inset Formula $v_{z}\ge0$
 \end_inset
 
@@ -1548,11 +1560,11 @@ A ball has a location
 
 \begin_layout Enumerate
 At each time step, this ball experiences 3 accelerations.
- One is friction, slowing its speed by a faction.
+ One is friction, slowing its speed by a fraction.
  Another is perpendicular to its velocity, changing its direction in horizontal
  plane.
  The third is gravitational acceleration.
- The first are randomly generated, but can not be large.
+ The first two are randomly generated, but can not be large.
 \end_layout
 
 \begin_layout Enumerate
@@ -1661,7 +1673,7 @@ noprefix "false"
 
  compares the prediction with the simulated ball movement.
  In 3D, they are quite different.
- But in 
+ But in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1670,14 +1682,14 @@ video
 \end_inset
 
  (2D), they are very close.
- This is not surprising, because pinhole camera model is a single-eye vision
- system, lacking depth perception.
- There are infinite number of 3D points that project to the same imaging
- point.
+ This is not surprising, because the pinhole camera model is a single-eye
+ vision system, which lacks depth perception.
+ Essentially, there are an infinite number of 3D points that project to
+ the same imaging point.
 \end_layout
 
 \begin_layout Standard
-The squared root of MSE at every time step is plotted in Fig.
+The square root of the MSE at every time step is plotted in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1689,14 +1701,14 @@ noprefix "false"
 \end_inset
 
 .
- Initially there is a huge error,, but it drops very rapidly.
- Then the error is close to 0 pixel.
+ Initially there is a huge error, but it drops rapidly, until the error
+ is close to 0 pixels.
  After that, the ball bounces off the ground multiple times.
- Each time the error jumps and then drops.
+ With each bounce, the error jumps and then drops.
  This is also not surprising, because bouncing is not considered in the
  prediction.
- Even with bouncing, the error is no more than 3 pixels, proving the high
- accuracy of this model.
+ Even with bouncing, the error is no more than 3 pixels, establishing the
+ high accuracy of this model.
 \end_layout
 
 \begin_layout Standard
@@ -1754,8 +1766,8 @@ Application to the real scenes
 \end_layout
 
 \begin_layout Standard
-I applied this predictor to a video with many free kicks.
- And the results are very good.
+I applied this predictor to a video with many free kicks, and the results
+ were very good.
  Fig.
  compares the prediction and observation in some frames.
  The complete video is at 
@@ -1810,7 +1822,7 @@ Observation (red boxes) and prediction (green boxes) in some video frames
 \end_layout
 
 \begin_layout Standard
-Note that YOLO11 only takes image size 
+Note that YOLOv11 only takes image size 
 \begin_inset Formula $640\times640$
 \end_inset
 
@@ -1848,14 +1860,56 @@ noprefix "false"
  (d) shows another interesting finding.
  Due to lack of detected boxes in the previous frames, the prediction (green
  box) is ahead of the observation (red box).
- But it accurately predicted where the ball would fall.
- In fact, after several frames, the ball fell to the almost exact location.
+ However, it accurately predicted where the ball would fall.
+ In fact, after several frames, the ball fell to the almost exact predicted
+ location.
 \end_layout
 
 \begin_layout Standard
-Since we can obtain fairly accurate prediction, we can focus the detection
+Since we can obtain fairly accurate predictions, we can focus the detection
  of objects in the predicted location, rather than searching the whole image.
  The detection speed and accuracy can therefore be greatly improved.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+
+\series medium
+Our model, applying a physics-based predictor to YOLOv11 to track objects,
+ has been shown to achieve highly accurate results with fast runtime.
+ When YOLOv11 cannot detect the object within a frame, it has the capability
+ to provide an accurate prediction of where the object is, allowing us to
+ focus on it to make its location more accurate.
+ In the future, I would like to focus on making the model more accurate
+ when the object bounces.
+ This sudden change in velocity is difficult to account for by the model
+ and leads to high error immediately after the bounce.
+ This could be resolved by adding a transformer to the model to detect bounces,
+ allowing the model to adjust immediately.
+\end_layout
+
+\begin_layout Section
+Code
+\end_layout
+
+\begin_layout Subparagraph
+
+\series medium
+The code, along with sample images and videos, can be found here: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/zcheng10/pdl
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \end_body
