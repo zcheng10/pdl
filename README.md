@@ -2,7 +2,7 @@ A sample video showing predicting the trajectory of a soccer ball is here:
 
 [Free kick](https://raw.githubusercontent.com/zcheng10/pdl/main/test/ext_clip_0_boxed.mp4)
 
-<video src="[https://raw.githubusercontent.com/zcheng10/pdl/main/test/ext_clip_0_boxed.mp4](https://github.com/user-attachments/assets/4999fdc0-d1f9-41ef-91a1-710db4c7656c)"/>
+<video src="https://github.com/user-attachments/assets/4999fdc0-d1f9-41ef-91a1-710db4c7656c" width="300"/>
 
 
 
