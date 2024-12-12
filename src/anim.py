@@ -14,6 +14,7 @@ if len(sys.argv) >= 3:
     readIn = sys.argv[2]
 
 legendOn = ("-l" in sys.argv)
+showError = ("-e" in sys.argv)
 
 if readIn is not None:
     # -- get data from this file
@@ -76,12 +77,17 @@ if False:
     plt.show()
     exit()
 
+if tsn == 2:
+    labs = ["observation", "prediction"]
+else:
+    labs = ["curve{}".format(curves[i]) for i in range(tsn)]
+
 if anim3D:
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ball = [0] * tsn
     for i in range(tsn):
-        ball[i], = ax.plot([], [], [], ".", label = "curve {}".format(curves[i]))
+        ball[i], = ax.plot([], [], [], ".", label = labs[i])
     ax.set_xlim(pall_xrange)
     ax.set_ylim(pall_yrange)
     ax.set_zlim(pall_zrange)
@@ -116,8 +122,8 @@ if anim2D:
     ax = fig.add_subplot(111)
     ball = [0] * tsn
     for i in range(tsn):
-        ball[i], = ax.plot([], [], ".",  label = "curve{}".format(curves[i]))
-    # ax.axis("equal")
+        ball[i], = ax.plot([], [], ".",  label = labs[i])
+    # ax.axis("equal") 
     ax.set_xlim(px_range)
     ax.set_ylim(py_range)
     ax.set_xlabel("X")
@@ -140,4 +146,14 @@ if anim2D:
     ani = FuncAnimation(fig, update, frames=300, interval=20, blit=True)
 
     # Display the animation
+    plt.show()
+
+if showError:
+    # -- show errors
+    plt.figure()
+    mse = (px[0,:] - px[1,:])**2 + (py[0,:] - py[1,:])**2
+    mse = np.sqrt(mse)
+    plt.plot(np.arange(num), mse)
+    plt.xlabel("t")
+    plt.ylabel("error")
     plt.show()

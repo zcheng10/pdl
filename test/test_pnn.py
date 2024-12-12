@@ -201,4 +201,5 @@ class TestVideo(unittest.TestCase):
         file = "ext_clip_0.mp4"
         fd = Feeder(file, ref_path="")
         fd.predict()
-        fd.playWithAnnotation(outfile = "")
+        # fd.playWithAnnotation(outfile = "")
+        fd.imageWithAnnotation(f_start=40, f_end = 80)

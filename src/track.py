@@ -140,7 +140,7 @@ class Feeder:
             
             fn = obs[i-1][0] + 1
             self.predicted[fn] = n_states
-            print("predict ", fn, n_states)
+            # print("predict ", fn, n_states)
 
             if (i < num) and (fn < obs[i][0]):
                 obs.insert(i, [fn, n_states])
@@ -164,6 +164,8 @@ class Feeder:
         if not cap.isOpened():
             return
         
+        max_num = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        
         if winTitle is None:
             winTitle = "Soccer Tracking"
 
@@ -183,7 +185,7 @@ class Feeder:
                     fourcc, fps, (width, height))
 
         cnt = 0
-        while cap.isOpened():
+        while cap.isOpened() or cnt >= max_num:
             success, frame = cap.read()
             if success:
                 if cnt in self.marked:
@@ -212,6 +214,53 @@ class Feeder:
 
         if toWrite:
             out.release()
+
+
+    def imageWithAnnotation(self, f_start, f_end, winTitle = None, ):
+        """Show the video with annotated bbox
+
+        Args:
+            winTitle: the window to show images. If None, images will
+                not show
+
+            outfile: if not None, output the annotated frames to
+                the video file. If empty (""), use the default
+                video file name ("*_boxed.mp4")
+        """
+        cap = cv2.VideoCapture(self.video)
+        if not cap.isOpened():
+            return
+        
+        max_num = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        
+        if winTitle is None:
+            winTitle = "Soccer Tracking"
+
+        cnt = 0
+        while cap.isOpened() and cnt <= f_end :
+            if cnt < f_start:
+                success, frame = cap.read()
+            if success:
+                if cnt in self.marked:
+                    bbox = self.marked[cnt].detach().numpy()
+                    bbox = bbox.astype("int")
+                    Feeder.annotate(frame, bbox)
+
+                if cnt in self.predicted:
+                    bbox = self.predicted[cnt].detach().numpy()
+                    bbox = bbox.astype("int")
+                    Feeder.annotate(frame, bbox, color = (0, 255, 0))
+            
+            cnt += 1
+
+        cv2.imwrite("ext_clip_0_sam.jpg", frame)
+        cv2.imshow(winTitle, frame)
+        cv2.waitKey(0)
+
+        cv2.destroyAllWindows()
+        cap.release()
+
+
 
     def compact(self, video_out_prefix : str, max_sep = 30):
         """Compact the video so that only the ball scenes are kept
