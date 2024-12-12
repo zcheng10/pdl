@@ -1,12 +1,5 @@
-# pdl
-Physical Deep Learning
+A sample video showing predicting the trajectory of a soccer ball is here:
 
-## Theory
-Suppose we already have a model to detect one or more classes of objects in a given frame. Where wi ll these objects arrive and with what velocity?
 
-### Pinhole camera model
-Denote the position of an object by $(x,y,z)$ 
+https://github.com/user-attachments/assets/4350fb23-f18f-4cef-a39a-4aab62ec3c3f
 
-## Ref:
-
-- https://viso.ai/deep-learning/object-tracking/
