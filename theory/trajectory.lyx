@@ -963,7 +963,7 @@ https://huggingface.co/Ultralytics/YOLO11
 
 \end_inset
 
- This pre-trained model can detect 80 classes, on of which is 
+ This pre-trained model can detect 80 classes, one of which is 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1051,7 +1051,7 @@ As a first-order approximation, assume that the video camera does not move,
 \end_inset
 
 where the unit is meters.
- The distance of the camera screen to the optimal center (pinhole) is 
+ The distance from the camera screen to the optimal center (pinhole) is 
 \begin_inset Formula $h_{s}=0.2$
 \end_inset
 
@@ -1202,7 +1202,7 @@ name "fig:The-equivalent-neural"
 
 The flow of imaging process, which is equivalent to a neural network.
  Then the estimation of the original state becomes optimizing the loss function
- through gradient descent method.
+ through the gradient descent method.
 \end_layout
 
 \end_inset
@@ -1312,7 +1312,7 @@ Then the problem is to find the initial
 \begin_inset Formula $\vec{s}=\left(\vec{r},\vec{v},\vec{a}\right)$
 \end_inset
 
- that minimizez 
+ that minimizes 
 \begin_inset Formula $L$
 \end_inset
 
@@ -1349,7 +1349,7 @@ Boyd, Stephen; Vandenberghe, Lieven (2004-03-08).
  The loss function has a gradient vector:
 \begin_inset Formula 
 \begin{equation}
-\frac{\partial L}{\partial\vec{B}_{i}}\nabla L=\left(\vec{B}\left(t+i\Delta t\right)-\vec{C}\left(t+i\Delta t\right)\right),\hspace{1em}i=0,1...,n
+\nabla L=\left(\vec{B}\left(t+i\Delta t\right)-\vec{C}\left(t+i\Delta t\right)\right),\hspace{1em}i=0,1...,n
 \end{equation}
 
 \end_inset
@@ -1371,7 +1371,7 @@ where
  by a small amount
 \begin_inset Formula 
 \[
-\delta\vec{B_{i}}=-\lambda\left(\frac{\partial L}{\partial\vec{B}_{i}}\right)
+\delta\vec{B_{i}}=-\lambda\left(\nabla L\right)
 \]
 
 \end_inset
@@ -1403,12 +1403,12 @@ namely,
 \begin_inset Formula $\vec{r},\vec{v},\vec{a}$
 \end_inset
 
- all receives their corrections.
- Then we use the new 
+ receives their corrections.
+ Then, we use the new 
 \begin_inset Formula $\vec{s}$
 \end_inset
 
- to do the imaging again (
+ to perform the imaging again (
 \begin_inset Quotes eld
 \end_inset
 
@@ -1433,8 +1433,8 @@ backward propagation
 
 \end_inset
 
-which indicates a local minimal.
- In practice, we stop after a certain of iterations or the loss is below
+which indicates a local minimum.
+ In practice, we stop after a certain number of iterations or if the loss is below
  a threshold.
 \end_layout
 
@@ -1673,7 +1673,7 @@ noprefix "false"
 
  compares the prediction with the simulated ball movement.
  In 3D, they are quite different.
- But in the 
+ However, in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1701,7 +1701,7 @@ noprefix "false"
 \end_inset
 
 .
- Initially there is a huge error, but it drops rapidly, until the error
+ Initially there is a huge error, but it drops rapidly until the error
  is close to 0 pixels.
  After that, the ball bounces off the ground multiple times.
  With each bounce, the error jumps and then drops.
