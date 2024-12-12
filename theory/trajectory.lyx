@@ -90,7 +90,68 @@ Pinhole camera model
 \end_layout
 
 \begin_layout Standard
-Without loss of generality, the pinhole is always located at 
+The most common imaging model used in computer vision is the pinhole camera
+ model, which is illustrated in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Pinhole-camera-model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename pasted1.png
+	lyxscale 70
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Pinhole-camera-model"
+
+\end_inset
+
+Pinhole camera model
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Without loss of generality, suppose the pinhole is located at 
 \begin_inset Formula $\left(0,0,0\right)$
 \end_inset
 
@@ -108,27 +169,33 @@ Without loss of generality, the pinhole is always located at
 \end_inset
 
 .
- The screen is located at a vector 
-\begin_inset Formula $\vec{h_{s}}$
+ The screen, on which the image is captured, is located at a vector 
+\begin_inset Formula $\vec{h_{s}}=h_{s}\hat{h_{0}}$
 \end_inset
 
- from the origin, its screen coordinates basic vectors are 
+ from the origin.
+ The screen coordinates basic vectors are 
 \begin_inset Formula $\hat{h_{0}}$
 \end_inset
 
 , 
-\begin_inset Formula $\vec{h_{1}}$
+\begin_inset Formula $\hat{h}_{1}$
 \end_inset
 
  and 
-\begin_inset Formula $\vec{h_{2}}$
+\begin_inset Formula $\hat{h}_{2}$
 \end_inset
 
 .
+ That is, 
+\begin_inset Formula $<\hat{h_{0}},\hat{h_{1}},\hat{h_{2}}>$
+\end_inset
+
+ also form a right-hand coordinate system.
  Note that
 \begin_inset Formula 
 \begin{equation}
-\vec{h_{0}}\perp\vec{h_{1}}\perp\vec{h_{2}}
+\hat{h_{0}}\perp\hat{h_{1}}\perp\hat{h_{2}}
 \end{equation}
 
 \end_inset
@@ -136,39 +203,16 @@ Without loss of generality, the pinhole is always located at
 
 \begin_inset Formula 
 \begin{equation}
-\left(\begin{array}{c}
-\hat{h_{0}}\\
-\hat{h_{1}}\\
-\hat{h_{2}}
-\end{array}\right)=T\left(\begin{array}{c}
-\hat{x}\\
-\hat{y}\\
-\hat{z}
-\end{array}\right)
+\hat{|h_{0}}|=|\hat{h_{1}}|=\hat{|h_{2}}|=1
 \end{equation}
 
 \end_inset
 
-where 
-\begin_inset Formula $T$
-\end_inset
 
- is an orthonormal matrix.
 \end_layout
 
 \begin_layout Standard
-Ideally, 
-\begin_inset Formula $\hat{h_{0}}//\vec{h_{s}}$
-\end_inset
-
-.
- But there might be a small angle between them.
- Let's assume 
-\begin_inset Formula $\vec{h_{s}}=h_{s}\hat{h_{0}}$
-\end_inset
-
-.
- The screen plane is given by
+The screen plane is given by
 \begin_inset Formula 
 \begin{equation}
 h_{s}\hat{h_{0}}+a\hat{h_{1}}+b\hat{h_{2}},\hspace{1em}a,b\in R
@@ -176,12 +220,16 @@ h_{s}\hat{h_{0}}+a\hat{h_{1}}+b\hat{h_{2}},\hspace{1em}a,b\in R
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 Then the projection of 
 \begin_inset Formula $\vec{r}$
 \end_inset
 
- on the screen, 
-\begin_inset Formula $\vec{r'}=\left(a,b\right)$
+ on the screen,which is the image of the object, 
+\begin_inset Formula $\vec{p}=\left(a,b\right)$
 \end_inset
 
 , is given by
@@ -192,7 +240,28 @@ Then the projection of
 
 \end_inset
 
+where 
+\begin_inset Formula $k$
+\end_inset
 
+ is the distance of the object from the pinhole, 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ are the 
+\begin_inset Quotes eld
+\end_inset
+
+screen coordinates
+\begin_inset Quotes erd
+\end_inset
+
+ of its image.
+ 
 \begin_inset Formula 
 \begin{equation}
 \left(\vec{r},\hat{h_{1}},\hat{h_{2}}\right)\left(\begin{array}{c}
@@ -253,7 +322,7 @@ k
 \end_layout
 
 \begin_layout Subsubsection
-The characteristics of the screen coordinates
+The characteristics of the screen coordinate system
 \end_layout
 
 \begin_layout Standard
@@ -270,16 +339,15 @@ The world coordinates is denoted by
 \end_inset
 
  spans the ground.
- In typical vision, 
-\begin_inset Formula $\vec{h}_{0}$
+ In the real world, usually not only do the objects move, but also the camera
+ moves simultaneously.
+ So 
+\begin_inset Formula $<\hat{h_{0}},\hat{h_{1}},\hat{h_{2}}>$
 \end_inset
 
- is close to 
-\begin_inset Formula $\vec{h}_{s}$
-\end_inset
-
-.
- And 
+ translates and rotates around the pinhole, and the pinhole also moves.
+ In typical scenarios, the camera stands vertically.
+ So 
 \begin_inset Formula $\vec{h_{2}}$
 \end_inset
 
@@ -297,22 +365,15 @@ The world coordinates is denoted by
 \end_inset
 
 
-\begin_inset Formula 
-\[
-T=\left(T_{ij}\right),1\le i,j\le3
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $T_{31},T_{32}\ll T_{33}$
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Subsubsection
-The solution to (
+The solution to the imaging equation
+\end_layout
+
+\begin_layout Standard
+In Eq.
+ (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:screen-proj"
@@ -323,10 +384,6 @@ noprefix "false"
 \end_inset
 
 )
-\end_layout
-
-\begin_layout Standard
-In 
 \begin_inset Formula 
 \[
 k\vec{r}+h_{s}\hat{h_{0}}+a\vec{h_{1}}+b\vec{h_{2}}=0
@@ -342,7 +399,18 @@ Multiplying the equation by
 \begin_inset Formula $i=0,1,2$
 \end_inset
 
-:
+, utilizing the property 
+\begin_inset Formula 
+\[
+\hat{h}_{i}.\hat{h}_{j}=\begin{cases}
+0 & i\ne j\\
+1 & i=j
+\end{cases}
+\]
+
+\end_inset
+
+Then 
 \begin_inset Formula 
 \[
 k\left(\vec{r}.\hat{h_{0}}\right)=-h_{s}
@@ -374,7 +442,30 @@ Therefore
 
 \end_inset
 
+The image is at 
+\begin_inset Formula $(a,b)$
+\end_inset
 
+ on the capturing device, typically a CCD or CMOS image sensor.
+ Note that the final image shown in an video will be translated and zoomed
+ according to the frame configuration.
+ So the final location of the pixel is 
+\begin_inset Formula 
+\[
+\left(a',b'\right)=\left(c_{x},c_{y}\right)+m\left(a,b\right)
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\left(c_{x},c_{y}\right)$
+\end_inset
+
+ are the offset of the image sensor center to the video center, 
+\begin_inset Formula $m$
+\end_inset
+
+ is the zoom factor.
 \end_layout
 
 \begin_layout Standard
@@ -382,7 +473,106 @@ Note that if
 \begin_inset Formula $\vec{r}\perp\hat{h_{0}},$
 \end_inset
 
-this object is out of the FOV and not on the screen.
+this object is out of the FOV (field-of-view) and not on the screen.
+\end_layout
+
+\begin_layout Standard
+Similarly, if 
+\begin_inset Formula $\vec{r}.\hat{h}_{0}<0$
+\end_inset
+
+, the object is 
+\begin_inset Quotes eld
+\end_inset
+
+behind
+\begin_inset Quotes erd
+\end_inset
+
+ the camera, and can not form an image.
+\end_layout
+
+\begin_layout Subsection
+The bounding box of an object
+\end_layout
+
+\begin_layout Standard
+Asusming its diameter is 
+\begin_inset Formula $D$
+\end_inset
+
+.
+ Then the whole shape can be approximated by a box whose vertexes are given
+ by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\vec{r_{i}}=\vec{r}+\left(\pm\frac{D}{2},\pm\frac{D}{2},\pm\frac{D}{2}\right)
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $1\le i\le8$
+\end_inset
+
+.
+ Then for each 
+\begin_inset Formula $\vec{r}_{i}$
+\end_inset
+
+, its projection on the camera screen is 
+\begin_inset Formula $\vec{p}_{i}$
+\end_inset
+
+, also obtained by Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:proj-solution"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Then the bounding box of the object's image is the range of the 8 projections:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+ll_{x}=\min(p_{i}(x)),\hspace{1em}ll_{y}=\min(p_{i}(y))
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+ur_{x}=\max(p_{i}(x)),\hspace{1em}ur_{y}=\max(p_{i}(y))
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $ll$
+\end_inset
+
+, 
+\begin_inset Formula $ur$
+\end_inset
+
+ mean lower-left and upper-right corner, respectively.
 \end_layout
 
 \begin_layout Subsection
