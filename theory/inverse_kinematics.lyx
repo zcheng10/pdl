@@ -116,13 +116,13 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Inverse kinematics (IK) is the process of calculating the joint parameters (like angles or positions) needed to place the end-effector (e.g.
+Inverse kinematics (IK) is the process of calculating the joint parameters (such as angles and positions) needed to place the end-effector (e.g.
  hand,
  gripper,
  foot) of a robot or animated character at a desired position and orientation in space.
- It plays critical roles in robotics and autonomous vehicles.
+ It plays a critical role in both robotics and computer animation.
  In these applications,
- it is easy for users to define the desired positions or trajectories,
+ it is generally easy for users to define the desired positions or trajectories,
  but difficult to directly give the values of the control variables.
  
 \end_layout
@@ -138,8 +138,7 @@ Consider a general form of robot,
 \end_inset
 
 .
- For example,
- in the 2-joint robotic arm illustrated in Fig.
+ An example is given in the 2-joint robotic arm illustrated in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
