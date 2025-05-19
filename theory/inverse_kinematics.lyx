@@ -1,0 +1,542 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding auto-legacy
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize 11
+\spacing single
+\use_hyperref false
+\papersize letter
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\spellchecker_ignore english end-effector
+\spellchecker_ignore english Eq
+\leftmargin 1.25in
+\topmargin 1.25in
+\rightmargin 1.25in
+\bottommargin 1.25in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Inverse Kinematics of Robotic Arm Manipulators
+\end_layout
+
+\begin_layout Author
+
+\series bold
+Zachary Cheng
+\end_layout
+
+\begin_layout Abstract
+Inverse kinematics (IK) is the process of calculating the joint parameters (like angles or positions) needed to place the end-effector (e.g.
+ hand,
+ gripper,
+ foot) of a robot or animated character at a desired position and orientation in space.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Inverse kinematics (IK) is the process of calculating the joint parameters (like angles or positions) needed to place the end-effector (e.g.
+ hand,
+ gripper,
+ foot) of a robot or animated character at a desired position and orientation in space.
+ It plays critical roles in robotics and autonomous vehicles.
+ In these applications,
+ it is easy for users to define the desired positions or trajectories,
+ but difficult to directly give the values of the control variables.
+ 
+\end_layout
+
+\begin_layout Section
+General models
+\end_layout
+
+\begin_layout Standard
+Consider a general form of robot,
+ whose control variables are denoted by a vector 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+.
+ For example,
+ in the 2-joint robotic arm illustrated in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:2-joint-robotic-arm"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename pasted1.png
+	lyxscale 80
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:2-joint-robotic-arm"
+
+\end_inset
+
+2-joint robotic arm with 2 control variables
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Constant angular velocity
+\end_layout
+
+\begin_layout Standard
+In the case when 
+\begin_inset Formula $\omega_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\omega_{2}$
+\end_inset
+
+ are constant,
+ the forward kinematics (
+\nospellcheck on
+FK
+\nospellcheck default
+) problem is formulated below.
+ Assuming their initial angles are 
+\begin_inset Formula $\alpha_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\alpha_{2}$
+\end_inset
+
+,
+ respectively.
+ At time 
+\begin_inset Formula $t$
+\end_inset
+
+,
+ 
+\begin_inset Formula 
+\begin{alignat}{1}
+q_{1} & =\alpha_{1}+\omega_{1}t\\
+q_{2} & =\alpha_{2}+\omega_{2}t
+\end{alignat}
+
+\end_inset
+
+Without loss of generality,
+ the position of the 1st joint is fixed at 
+\begin_inset Formula $\left(0,0\right)$
+\end_inset
+
+.The position of the 2nd joint is 
+\begin_inset Formula 
+\begin{equation}
+\vec{r_{2}}=\left(\begin{array}{c}
+L_{1}\cos\left(\alpha_{1}+\omega_{1}t\right)\\
+L_{1}\sin\left(\alpha_{1}+\omega_{1}t\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+And the position of the gripper is given by
+\begin_inset Formula 
+\begin{alignat}{1}
+\vec{r}\left(t\right) & =\vec{r_{2}}+\left(\begin{array}{c}
+L_{2}\cos\left(q_{1}+q_{2}\right)\\
+L_{2}\sin\left(q_{1}+q_{2}\right)
+\end{array}\right)\\
+ & =\left(\begin{array}{c}
+L_{1}\cos\left(\alpha_{1}+\omega_{1}t\right)\\
+L_{1}\sin\left(\alpha_{1}+\omega_{1}t\right)
+\end{array}\right)+\left(\begin{array}{c}
+L_{2}\cos\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t\right)\\
+L_{2}\sin\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t\right)
+\end{array}\right)\label{eq:r-release}
+\end{alignat}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the gripper releases a ball at this time,
+ the velocity of the ball is the same as the velocity of the gripper,
+ which is given by
+\begin_inset Formula 
+\begin{equation}
+\vec{v}=\vec{v_{1}}+\vec{v_{21}}
+\end{equation}
+
+\end_inset
+
+or we can simply take the derivative of 
+\begin_inset Formula $\vec{r}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\vec{v}\left(t\right)=\frac{d\vec{r}}{dt}=\omega_{1}\left(\begin{array}{c}
+-L_{1}\sin\left(\alpha_{1}+\omega_{1}t\right)\\
+L_{1}\cos\left(\alpha_{1}+\omega_{1}t\right)
+\end{array}\right)+\left(\omega_{1}+\omega_{2}\right)\left(\begin{array}{c}
+-L_{2}\sin\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t\right)\\
+L_{2}\cos\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t\right)
+\end{array}\right)\label{eq:v-release}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After releasing,
+ the ball follows this kinematics equation:
+\begin_inset Formula 
+\begin{equation}
+\vec{r}\left(t\right)=\vec{r_{0}}+\vec{v_{0}}t+\frac{1}{2}\vec{g}t^{2}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\vec{g}=\left(0,-g\right)$
+\end_inset
+
+ is the gravitational acceleration.
+ And 
+\begin_inset Formula $\vec{r_{0}}$
+\end_inset
+
+,
+ 
+\begin_inset Formula $\vec{v}_{0}$
+\end_inset
+
+ are the position and velocity of the ball when being released.
+\end_layout
+
+\begin_layout Standard
+In order for the ball to hit a target at the position 
+\begin_inset Formula $\vec{p}=\left(w,h\right)$
+\end_inset
+
+,
+ there shall exist a time 
+\begin_inset Formula $\tau$
+\end_inset
+
+ such that
+\begin_inset Formula 
+\begin{equation}
+\vec{r_{0}}+\vec{v_{0}}\tau+\frac{1}{2}\vec{g}\tau^{2}=\vec{p}
+\end{equation}
+
+\end_inset
+
+Denote 
+\begin_inset Formula 
+\[
+\vec{r_{0}}=\left(\begin{array}{c}
+r_{0x}\\
+r_{0y}
+\end{array}\right),\vec{v_{0}}=\left(\begin{array}{c}
+v_{0x}\\
+v_{0y}
+\end{array}\right)
+\]
+
+\end_inset
+
+Then 
+\begin_inset Formula 
+\begin{equation}
+\tau=\frac{w-r_{0x}}{v_{0x}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+r_{0y}+v_{0y}\tau-\frac{1}{2}g\tau^{2}=h
+\end{equation}
+
+\end_inset
+
+or
+\begin_inset Formula 
+\begin{equation}
+r_{0y}+v_{0y}\frac{w-r_{0x}}{v_{0x}}-\frac{1}{2}g\left(\frac{w-r_{0x}}{v_{0x}}\right)^{2}=h\label{eq:hit-target}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combing Eq (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:r-release"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+),
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:v-release"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:hit-target"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+),
+ the IK problem is to find the angular velocity 
+\begin_inset Formula $\omega_{1}$
+\end_inset
+
+and 
+\begin_inset Formula $\omega_{2}$
+\end_inset
+
+,
+ such that at a user-specified time 
+\begin_inset Formula $t_{0}$
+\end_inset
+
+,
+ the following equations and constraints are satisfied:
+\begin_inset Formula 
+\begin{equation}
+\vec{r_{0}}=\left(\begin{array}{c}
+r_{0x}\\
+r_{0y}
+\end{array}\right)=\left(\begin{array}{c}
+L_{1}\cos\left(\alpha_{1}+\omega_{1}t_{0}\right)\\
+L_{1}\sin\left(\alpha_{1}+\omega_{1}t_{0}\right)
+\end{array}\right)+\left(\begin{array}{c}
+L_{2}\cos\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t_{0}\right)\\
+L_{2}\sin\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t_{0}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\vec{v}_{0}=\left(\begin{array}{c}
+v_{0x}\\
+v_{0y}
+\end{array}\right)=\omega_{1}\left(\begin{array}{c}
+-L_{1}\sin\left(\alpha_{1}+\omega_{1}t_{0}\right)\\
+L_{1}\cos\left(\alpha_{1}+\omega_{1}t_{0}\right)
+\end{array}\right)+\left(\omega_{1}+\omega_{2}\right)\left(\begin{array}{c}
+-L_{2}\sin\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t_{0}\right)\\
+L_{2}\cos\left(\alpha_{1}+\alpha_{2}+\left(\omega_{1}+\omega_{2}\right)t_{0}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+r_{0y}+v_{0y}\frac{w-r_{0x}}{v_{0x}}-\frac{1}{2}g\left(\frac{w-r_{0x}}{v_{0x}}\right)^{2}=h\label{eq:hit-target-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that there is only 1 constraint,
+ namely Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:hit-target-1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+),
+ whereas there are 2 unknown variables,
+ 
+\begin_inset Formula $\omega_{1}$
+\end_inset
+
+and 
+\begin_inset Formula $\omega_{2}$
+\end_inset
+
+.
+ So there are infinite number of solutions.
+ Other constraints can be applied to trim physically inappropriate solutions.
+ For example,
+ we can require the fall is falling when it hits the target (net).
+ That is,
+\begin_inset Formula 
+\begin{equation}
+v_{0y}-g\tau<0\implies v_{0y}-g\frac{w-r_{0x}}{v_{0x}}<0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also note that the equations are non-linear,
+ so analytical solutions are usually not available.
+ Numerical method,
+ such as Gradient Descent (GD),
+ are employed to get solutions.
+\end_layout
+
+\end_body
+\end_document
