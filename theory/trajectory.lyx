@@ -1,16 +1,16 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 544
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
 \begin_document
 \begin_header
 \save_transient_properties true
 \origin unavailable
 \textclass article
 \use_default_options true
-\maintain_unincluded_children false
+\maintain_unincluded_children no
 \language english
 \language_package default
-\inputencoding auto
-\fontencoding global
+\inputencoding auto-legacy
+\fontencoding auto
 \font_roman "default" "default"
 \font_sans "default" "default"
 \font_typewriter "default" "default"
@@ -18,7 +18,9 @@
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
-\font_osf false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
 \use_microtype false
@@ -31,7 +33,7 @@
 \paperfontsize 11
 \spacing single
 \use_hyperref false
-\papersize letterpaper
+\papersize letter
 \use_geometry true
 \use_package amsmath 1
 \use_package amssymb 1
@@ -52,7 +54,9 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
+\use_formatted_ref 0
 \use_minted 0
+\use_lineno 0
 \index Index
 \shortcut idx
 \color #008000
@@ -72,11 +76,16 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\tablestyle default
 \tracking_changes false
 \output_changes false
+\change_bars false
+\postpone_fragile_content false
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
 \end_header
 
 \begin_body
@@ -98,21 +107,17 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Object tracking is an important topic in the realm of computer vision, gaining
- increasing importance due to its wide range of applications across various
- industries.
- This technology entails the automatic detection and monitoring of objects
- within a video sequence, interpreting their trajectories with high accuracy.
- The primary goal of object tracking is to maintain the identity of objects
- as they move through different frames of a video, ensuring that each object
- is accurately followed throughout the entire sequence.
- We present a hybrid object tracking model that utilizes YOLOv11 within
- a physics-based setup that uses some initial frames to predict the trajectory
- of the object, allowing us to track it with more accuracy and efficiency.
- We trained and tested the model using a dataset of free kick videos, which
- provided diverse and challenging scenarios for tracking moving objects.
- Results suggest high accuracy comparable to the current powerful models
- available as well as faster and more efficient performance.
+Object tracking is an important topic in the realm of computer vision,
+ gaining increasing importance due to its wide range of applications across various industries.
+ This technology entails the automatic detection and monitoring of objects within a video sequence,
+ interpreting their trajectories with high accuracy.
+ The primary goal of object tracking is to maintain the identity of objects as they move through different frames of a video,
+ ensuring that each object is accurately followed throughout the entire sequence.
+ We present a hybrid object tracking model that utilizes YOLOv11 within a physics-based setup that uses some initial frames to predict the trajectory of the object,
+ allowing us to track it with more accuracy and efficiency.
+ We trained and tested the model using a dataset of free kick videos,
+ which provided diverse and challenging scenarios for tracking moving objects.
+ Results suggest high accuracy comparable to the current powerful models available as well as faster and more efficient performance.
  
 \end_layout
 
@@ -121,39 +126,44 @@ Motivation
 \end_layout
 
 \begin_layout Standard
-The motivation behind object tracking is deeply rooted in its vast applicability
- and potential to enhance numerous fields.
- In robotics, for instance, object tracking is essential for navigation,
- manipulation, and interaction with dynamic environments.
- Robots rely heavily on object tracking to understand their surroundings
- and make informed decisions.
- This capability extends to surveillance systems, where tracking individuals
- or objects in real-time can significantly improve security and monitoring.
- In the medical field, object tracking aids in analyzing patient movements
- and detecting anomalies.
- With the advent of autonomous vehicles, object tracking is essential for
- detecting and predicting the behavior of pedestrians, vehicles, and other
- dynamic elements in the environment.
+The motivation behind object tracking is deeply rooted in its vast applicability and potential to enhance numerous fields.
+ In robotics,
+ for instance,
+ object tracking is essential for navigation,
+ manipulation,
+ and interaction with dynamic environments.
+ Robots rely heavily on object tracking to understand their surroundings and make informed decisions.
+ This capability extends to surveillance systems,
+ where tracking individuals or objects in real-time can significantly improve security and monitoring.
+ In the medical field,
+ object tracking aids in analyzing patient movements and detecting anomalies.
+ With the advent of autonomous vehicles,
+ object tracking is essential for detecting and predicting the behavior of pedestrians,
+ vehicles,
+ and other dynamic elements in the environment.
  
 \end_layout
 
 \begin_layout Subsection
-What is Object Tracking? 
+What is Object Tracking?
+ 
 \end_layout
 
 \begin_layout Standard
-Object tracking involves the use of algorithms to follow objects through
- consecutive frames of a video.
- The process begins with object detection, where the initial positions of
- objects are identified.
- These objects are then assigned unique identifiers, which the tracking
- system uses to monitor their movements across frames.
- The challenge lies in accurately maintaining these identifiers despite
- changes in object appearance, occlusions, and complex motion patterns.
+Object tracking involves the use of algorithms to follow objects through consecutive frames of a video.
+ The process begins with object detection,
+ where the initial positions of objects are identified.
+ These objects are then assigned unique identifiers,
+ which the tracking system uses to monitor their movements across frames.
+ The challenge lies in accurately maintaining these identifiers despite changes in object appearance,
+ occlusions,
+ and complex motion patterns.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement document
+alignment document
 wide false
 sideways false
 status open
@@ -190,36 +200,36 @@ Current Methods of Object Tracking
 \end_layout
 
 \begin_layout Standard
-Various methods are employed for object tracking, each with its strengths
- and limitations.
- Traditional methods often rely on feature-based techniques, such as the
- Kanade-Lucas-Tomasi (KLT) tracker, which uses optical flow to track feature
- points.
- However, these methods can struggle with complex scenarios involving significan
-t changes in object appearance or background clutter.
+Various methods are employed for object tracking,
+ each with its strengths and limitations.
+ Traditional methods often rely on feature-based techniques,
+ such as the Kanade-Lucas-Tomasi (KLT) tracker,
+ which uses optical flow to track feature points.
+ However,
+ these methods can struggle with complex scenarios involving significant changes in object appearance or background clutter.
 \end_layout
 
 \begin_layout Standard
-In contrast, modern approaches employ deep learning techniques, offering
- enhanced accuracy and robustness.
- Convolutional Neural Networks (CNNs) have become the cornerstone of many
- state-of-the-art tracking algorithms.
- Models like the Fast R-CNN and Faster R-CNN are particularly notable for
- their ability to balance detection speed and accuracy.
- Other advanced models, such as the DeepSORT algorithm, integrate appearance
- information to improve tracking performance, especially in the presence
- of occlusions.
+In contrast,
+ modern approaches employ deep learning techniques,
+ offering enhanced accuracy and robustness.
+ Convolutional Neural Networks (CNNs) have become the cornerstone of many state-of-the-art tracking algorithms.
+ Models like the Fast R-CNN and Faster R-CNN are particularly notable for their ability to balance detection speed and accuracy.
+ Other advanced models,
+ such as the DeepSORT algorithm,
+ integrate appearance information to improve tracking performance,
+ especially in the presence of occlusions.
  
 \end_layout
 
 \begin_layout Standard
-Single Object Tracking (SOT) and Multiple Object Tracking (MOT) are two
- primary categories within the field.
- SOT focuses on tracking a single object, initializing the object in the
- first frame and following it through subsequent frames.
- MOT, on the other hand, involves tracking multiple objects simultaneously,
- requiring more complex data association techniques to maintain accurate
- trajectories for each object.
+Single Object Tracking (SOT) and Multiple Object Tracking (MOT) are two primary categories within the field.
+ SOT focuses on tracking a single object,
+ initializing the object in the first frame and following it through subsequent frames.
+ MOT,
+ on the other hand,
+ involves tracking multiple objects simultaneously,
+ requiring more complex data association techniques to maintain accurate trajectories for each object.
 \end_layout
 
 \begin_layout Subsection
@@ -232,7 +242,8 @@ Several challenges complicate the task of object tracking.
 status open
 
 \begin_layout Plain Layout
-Ref: https://viso.ai/deep-learning/object-tracking/ 
+Ref:
+ https://viso.ai/deep-learning/object-tracking/ 
 \end_layout
 
 \end_inset
@@ -245,10 +256,12 @@ Ref: https://viso.ai/deep-learning/object-tracking/
 \series bold
 Training and Tracking Speed
 \series default
-: Balancing the accuracy and speed of tracking algorithms is critical, especiall
-y for real-time applications.
- Techniques such as the use of anchor boxes, feature maps, and feature pyramids
- help address these issues.
+:
+ Balancing the accuracy and speed of tracking algorithms is critical,
+ especially for real-time applications.
+ Techniques such as the use of anchor boxes,
+ feature maps,
+ and feature pyramids help address these issues.
  
 \end_layout
 
@@ -257,9 +270,9 @@ y for real-time applications.
 \series bold
 Background Distractions
 \series default
-: Complex or cluttered backgrounds can make it difficult for tracking algorithms
- to distinguish between the object and the background, leading to potential
- errors.
+:
+ Complex or cluttered backgrounds can make it difficult for tracking algorithms to distinguish between the object and the background,
+ leading to potential errors.
 \end_layout
 
 \begin_layout Enumerate
@@ -267,9 +280,10 @@ Background Distractions
 \series bold
 Multiple Spatial Scales
 \series default
-: Objects can vary in size and aspect ratio, complicating the tracking process.
- Techniques like image pyramids and feature pyramids are employed to handle
- these variations.
+:
+ Objects can vary in size and aspect ratio,
+ complicating the tracking process.
+ Techniques like image pyramids and feature pyramids are employed to handle these variations.
 \end_layout
 
 \begin_layout Enumerate
@@ -277,10 +291,10 @@ Multiple Spatial Scales
 \series bold
 Occlusion
 \series default
-: When objects overlap or are partially hidden, tracking algorithms may
- lose track of the object.
- Occlusion sensitivity measures help mitigate this problem by identifying
- critical image regions for classification.
+:
+ When objects overlap or are partially hidden,
+ tracking algorithms may lose track of the object.
+ Occlusion sensitivity measures help mitigate this problem by identifying critical image regions for classification.
  
 \end_layout
 
@@ -289,37 +303,39 @@ Approach
 \end_layout
 
 \begin_layout Standard
-Building upon the existing methodologies, my approach to object tracking
- introduces a physics-based model that integrates motion prediction and
- adaptive learning.
- This model leverages physical principles to predict the future positions
- of objects more accurately.
- By combining these predictions with adaptive learning algorithms, the model
- can dynamically adjust to changes in object behavior and appearance, significan
-tly improving tracking robustness and accuracy.
+Building upon the existing methodologies,
+ my approach to object tracking introduces a physics-based model that integrates motion prediction and adaptive learning.
+ This model leverages physical principles to predict the future positions of objects more accurately.
+ By combining these predictions with adaptive learning algorithms,
+ the model can dynamically adjust to changes in object behavior and appearance,
+ significantly improving tracking robustness and accuracy.
  Current benchmark object tracking models generally employ brute-force methods;
- take, for example, the YOLO model, which attempts to locate the object
- of interest within each frame and link its positions between successive
- frames.
+ take,
+ for example,
+ the YOLO model,
+ which attempts to locate the object of interest within each frame and link its positions between successive frames.
  YOLO takes in 
 \begin_inset Formula $640\times640$
 \end_inset
 
- images, which presents a challenge when it comes to object tracking within
- a wide field of vision.
- With images of a larger size, it is forced to either shrink the image,
- which leads to a loss of information, or separate the image into individual
- 
+ images,
+ which presents a challenge when it comes to object tracking within a wide field of vision.
+ With images of a larger size,
+ it is forced to either shrink the image,
+ which leads to a loss of information,
+ or separate the image into individual 
 \begin_inset Formula $640\times640$
 \end_inset
 
- images, which is inefficient and time-consuming.
- Therefore, we suggest an approach that utilizes the YOLO model as a base
- and implements a trajectory prediction layer that provides estimations
- for the position, velocity, and acceleration of the object.
- This allows us to cut out an image of the appropriate size from each frame
- on which we can apply the YOLO algorithm, allowing for more accurate, efficient
- localization.
+ images,
+ which is inefficient and time-consuming.
+ Therefore,
+ we suggest an approach that utilizes the YOLO model as a base and implements a trajectory prediction layer that provides estimations for the position,
+ velocity,
+ and acceleration of the object.
+ This allows us to cut out an image of the appropriate size from each frame on which we can apply the YOLO algorithm,
+ allowing for more accurate,
+ efficient localization.
  
 \end_layout
 
@@ -332,22 +348,23 @@ Pinhole camera model
 \end_layout
 
 \begin_layout Standard
-The most common imaging model used in computer vision is the pinhole camera
- model
+The most common imaging model used in computer vision is the pinhole camera model
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
 David A.
  Forsyth and Jean Ponce (2003).
- Computer Vision, A Modern Approach.
+ Computer Vision,
+ A Modern Approach.
  Prentice Hall.
  ISBN 0-12-379777-2.
 \end_layout
 
 \end_inset
 
-, which is illustrated in Fig.
+,
+ which is illustrated in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -355,6 +372,7 @@ reference "fig:Pinhole-camera-model"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -364,6 +382,7 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Float figure
 placement h
+alignment document
 wide false
 sideways false
 status open
@@ -407,7 +426,8 @@ Pinhole camera model
 \end_layout
 
 \begin_layout Standard
-Without loss of generality, suppose the pinhole is located at 
+Without loss of generality,
+ suppose the pinhole is located at 
 \begin_inset Formula $\left(0,0,0\right)$
 \end_inset
 
@@ -416,11 +436,13 @@ Without loss of generality, suppose the pinhole is located at
 \begin_inset Formula $\vec{r}=\left(x,y,z\right)$
 \end_inset
 
-, its velocity by 
+,
+ its velocity by 
 \begin_inset Formula $\vec{v}=\left(v_{x},v_{y},v_{z}\right)$
 \end_inset
 
-, and its acceleration by 
+,
+ and its acceleration by 
 \begin_inset Formula $\vec{a}=\left(a_{x},a_{y},a_{z}\right)$
 \end_inset
 
@@ -434,7 +456,8 @@ Without loss of generality, suppose the pinhole is located at
 \begin_inset Formula $\hat{h_{0}}$
 \end_inset
 
-, 
+,
+ 
 \begin_inset Formula $\hat{h}_{1}$
 \end_inset
 
@@ -443,7 +466,8 @@ Without loss of generality, suppose the pinhole is located at
 \end_inset
 
 .
- That is, 
+ That is,
+ 
 \begin_inset Formula $<\hat{h_{0}},\hat{h_{1}},\hat{h_{2}}>$
 \end_inset
 
@@ -484,11 +508,14 @@ Then the projection of
 \begin_inset Formula $\vec{r}$
 \end_inset
 
- on the screen, which is the image of the object, 
+ on the screen,
+ which is the image of the object,
+ 
 \begin_inset Formula $\vec{p}=\left(a,b\right)$
 \end_inset
 
-, is given by
+,
+ is given by
 \begin_inset Formula 
 \begin{equation}
 -k\vec{r}=h_{s}\hat{h_{0}}+a\vec{h_{1}}+b\vec{h_{2}}\label{eq:screen-proj}
@@ -558,11 +585,13 @@ as the inverse camera matrix.
 \begin_inset Formula $\left(a,b\right)$
 \end_inset
 
-, as well as its distance 
+,
+ as well as its distance 
 \begin_inset Formula $k$
 \end_inset
 
- from the pinhole, are given by
+ from the pinhole,
+ are given by
 \begin_inset Formula 
 \begin{equation}
 \underline{\left(\begin{array}{c}
@@ -586,7 +615,8 @@ The world coordinates are denoted by
 \begin_inset Formula $\left(\hat{x},\hat{y},\hat{z}\right)$
 \end_inset
 
-, where 
+,
+ where 
 \begin_inset Formula $\hat{z}$
 \end_inset
 
@@ -595,18 +625,24 @@ The world coordinates are denoted by
 \end_inset
 
  spans the ground.
- In the real world situations that we hope to analyze, not only do the objects
- move, but the camera also moves simultaneously.
- Therefore, 
+ In the real world situations that we hope to analyze,
+ not only do the objects move,
+ but the camera also moves simultaneously.
+ Therefore,
+ 
 \begin_inset Formula $<\hat{h_{0}},\hat{h_{1}},\hat{h_{2}}>$
 \end_inset
 
- translates and rotates around the pinhole, and the pinhole also moves.
- In typical scenarios, the camera stands vertically, so 
+ translates and rotates around the pinhole,
+ and the pinhole also moves.
+ In typical scenarios,
+ the camera stands vertically,
+ so 
 \begin_inset Formula $\vec{h_{2}}$
 \end_inset
 
- is close to vertical, the angle between them being 
+ is close to vertical,
+ the angle between them being 
 \begin_inset Formula $\theta$
 \end_inset
 
@@ -635,6 +671,7 @@ reference "eq:screen-proj"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -654,7 +691,8 @@ Multiplying the equation by
 \begin_inset Formula $i=0,1,2$
 \end_inset
 
-, noting that 
+,
+ noting that 
 \begin_inset Formula 
 \[
 \hat{h}_{i}\cdot\hat{h}_{j}=\begin{cases}
@@ -701,9 +739,9 @@ The image is at
 \begin_inset Formula $(a,b)$
 \end_inset
 
- on the capturing device, typically a CCD or CMOS image sensor.
- Note that the final image shown in an video will be translated and zoomed
- according to the frame configuration.
+ on the capturing device,
+ typically a CCD or CMOS image sensor.
+ Note that the final image shown in an video will be translated and zoomed according to the frame configuration.
  The final location of the pixel is 
 \begin_inset Formula 
 \begin{equation}
@@ -729,14 +767,13 @@ Note that if
 \end_inset
 
 this object is out of the FOV (field-of-view) and not on the screen.
-\end_layout
-
-\begin_layout Standard
-Similarly, if 
+ Similarly,
+ if 
 \begin_inset Formula $\vec{r}\cdot\hat{h}_{0}<0$
 \end_inset
 
-, the object is 
+,
+ the object is 
 \begin_inset Quotes eld
 \end_inset
 
@@ -756,8 +793,8 @@ Assuming the object's diameter is
 \begin_inset Formula $D$
 \end_inset
 
-, the whole shape can be approximated by a box whose vertices are given
- by
+,
+ the whole shape can be approximated by a box whose vertices are given by
 \end_layout
 
 \begin_layout Standard
@@ -777,11 +814,13 @@ where
 \begin_inset Formula $\vec{r}_{i}$
 \end_inset
 
-, its projection on the camera screen is 
+,
+ its projection on the camera screen is 
 \begin_inset Formula $\vec{p}_{i}=\left(a'_{i},b'_{i}\right)$
 \end_inset
 
-, also obtained by Eq.
+,
+ also obtained by Eq.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -789,6 +828,7 @@ reference "eq:proj-solution"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -796,7 +836,8 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-Thus, the bounding box of the object's image is the range of the 8 projections:
+Thus,
+ the bounding box of the object's image is the range of the 8 projections:
 \end_layout
 
 \begin_layout Standard
@@ -822,13 +863,15 @@ where
 \begin_inset Formula $ll$
 \end_inset
 
-, 
+,
+ 
 \begin_inset Formula $ur$
 \end_inset
 
- denote the lower-left and upper-right corner, respectively.
- For the sake of simplicity, denote the bounding box of the object's image
- by
+ denote the lower-left and upper-right corner,
+ respectively.
+ For the sake of simplicity,
+ denote the bounding box of the object's image by
 \begin_inset Formula 
 \begin{equation}
 \vec{B}=\left(\begin{array}{c}
@@ -874,7 +917,8 @@ Then after a short time
 \begin_inset Formula $\Delta t$
 \end_inset
 
-, its state becomes
+,
+ its state becomes
 \begin_inset Formula 
 \begin{equation}
 \vec{s}\left(t+\Delta t\right)=\left(\begin{array}{c}
@@ -898,8 +942,8 @@ where
 \begin_inset Formula $f$
 \end_inset
 
- is the operator that maps the 3D location of an object to the bounding
- box of its image, described by Eq.
+ is the operator that maps the 3D location of an object to the bounding box of its image,
+ described by Eq.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -907,6 +951,7 @@ reference "eq:proj-solution"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -917,6 +962,7 @@ reference "eq:bbox-final"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -928,19 +974,18 @@ Trajectory prediction
 \end_layout
 
 \begin_layout Standard
-Given a sequence of image frames captured by a video camera, we must predict
- the trajectory of an object.
- As human or animals do, we first need to locate the object in these frames
- and then predict its next location based on its current trajectory.
- Very often, we will need to use experience on how such objects typically
- move.
+Given a sequence of image frames captured by a video camera,
+ we must predict the trajectory of an object.
+ As human or animals do,
+ we first need to locate the object in these frames and then predict its next location based on its current trajectory.
+ Very often,
+ we will need to use experience on how such objects typically move.
  
 \end_layout
 
 \begin_layout Standard
-YOLO (You Only Look Once) is a real-time object detection and image segmentation
- deep neural network (DNN) model, developed by Joseph Redmon and Ali Farhadi
- at the University of Washington
+YOLO (You Only Look Once) is a real-time object detection and image segmentation deep neural network (DNN) model,
+ developed by Joseph Redmon and Ali Farhadi at the University of Washington
 \begin_inset Foot
 status open
 
@@ -951,8 +996,8 @@ https://docs.ultralytics.com/
 \end_inset
 
 .
- Since its launch in 2015, YOLO has gained popularity for its high speed
- and accuracy.
+ Since its launch in 2015,
+ YOLO has gained popularity for its high speed and accuracy.
  The latest model version is YOLOv11.
 \begin_inset Foot
 status open
@@ -963,7 +1008,8 @@ https://huggingface.co/Ultralytics/YOLO11
 
 \end_inset
 
- This pre-trained model can detect 80 classes, one of which is 
+ This pre-trained model can detect 80 classes,
+ one of which is 
 \begin_inset Quotes eld
 \end_inset
 
@@ -972,14 +1018,15 @@ sports ball
 \end_inset
 
  (class 32).
- In this project, I use YOLOv11s to locate the bounding box of a soccer
- ball, shown in Fig 
+ We use YOLOv11s to locate the bounding box of a soccer ball,
+ shown in Fig 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:The-red-box"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -989,6 +1036,7 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Float figure
 placement h
+alignment document
 wide false
 sideways false
 status open
@@ -1036,9 +1084,11 @@ Assumptions
 \end_layout
 
 \begin_layout Standard
-As a first-order approximation, assume that the video camera does not move,
+As a first-order approximation,
+ assume that the video camera does not move,
  and that it is perfectly aligned with the world coordinate system.
- That is 
+ That is,
+ 
 \begin_inset Formula 
 \[
 \left(\hat{h}_{0},\hat{h}_{1},\hat{h}_{2}\right)=\left(\begin{array}{ccc}
@@ -1064,6 +1114,7 @@ reference "eq:screen-zoom"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -1079,7 +1130,8 @@ The camera is assumed to be
 \begin_inset Formula $1.5$
 \end_inset
 
- m above the ground, which means the ground is at 
+ m above the ground,
+ which means the ground is at 
 \begin_inset Formula $z=-1.5$
 \end_inset
 
@@ -1088,8 +1140,9 @@ The camera is assumed to be
 \end_layout
 
 \begin_layout Standard
-These numbers are rather arbitrary, but as shown later, they have little
- effect on prediction accuracy.
+These numbers are rather arbitrary,
+ but as shown later,
+ they have little effect on prediction accuracy.
 \end_layout
 
 \begin_layout Standard
@@ -1097,7 +1150,8 @@ The diameter of a size-5 soccer ball is taken as
 \begin_inset Formula $0.22$
 \end_inset
 
- m in this project, which is the international standard.
+ m in this project,
+ which is the international standard.
 \begin_inset Foot
 status open
 
@@ -1115,7 +1169,8 @@ The time step between two consecutive video frames is
 \begin_inset Formula $\Delta t=0.03$
 \end_inset
 
- sec, corresponding to about 30 frames per sec.
+ sec,
+ corresponding to about 30 frames per sec.
 \end_layout
 
 \begin_layout Subsection
@@ -1127,13 +1182,14 @@ Given
 \begin_inset Formula $n+1$
 \end_inset
 
- bounding boxes in the corresponding consecutive images, how do we predict
- the bounding boxes in the next 
+ bounding boxes in the corresponding consecutive images,
+ how do we predict the bounding boxes in the next 
 \begin_inset Formula $m$
 \end_inset
 
- image frames? Our observations are the bounding boxes, and the unknowns
- (
+ image frames?
+ Our observations are the bounding boxes,
+ and the unknowns (
 \begin_inset Quotes eld
 \end_inset
 
@@ -1146,17 +1202,20 @@ hidden states
 \end_inset
 
  of the object.
- If we can estimate the states, we can extrapolate the motion to the next
- several time steps.
+ If we can estimate the states,
+ we can extrapolate the motion to the next several time steps.
 \end_layout
 
 \begin_layout Standard
-As an approximation, assume acceleration in this sequence is a constant.
- Thus, all of the states at 
+As an approximation,
+ assume acceleration in this sequence is a constant.
+ Thus,
+ all of the states at 
 \begin_inset Formula $t=0,\Delta t,2\Delta t,...,n\Delta t$
 \end_inset
 
-, are determined by the initial state.
+,
+ are determined by the initial state.
  We only need to estimate the initial state.
  The imaging process is illustrated in Fig.
  
@@ -1166,6 +1225,7 @@ reference "fig:The-equivalent-neural"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -1175,6 +1235,7 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Float figure
 placement h
+alignment document
 wide false
 sideways false
 status open
@@ -1200,9 +1261,9 @@ name "fig:The-equivalent-neural"
 
 \end_inset
 
-The flow of imaging process, which is equivalent to a neural network.
- Then the estimation of the original state becomes optimizing the loss function
- through the gradient descent method.
+The flow of imaging process,
+ which is equivalent to a neural network.
+ Then the estimation of the original state becomes optimizing the loss function through the gradient descent method.
 \end_layout
 
 \end_inset
@@ -1224,6 +1285,7 @@ reference "eq:proj-solution"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -1234,12 +1296,14 @@ reference "eq:bbox-final"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
 ).
- Note that these equations are all differentiable, thus, the process is
- equivalent to a 2-layer neural network.
+ Note that these equations are all differentiable,
+ thus,
+ the process is equivalent to a 2-layer neural network.
  The 1st layer maps 
 \begin_inset Formula $\vec{s}\left(t\right)$
 \end_inset
@@ -1248,7 +1312,8 @@ noprefix "false"
 \begin_inset Formula $\vec{s}\left(t+i\Delta t\right)$
 \end_inset
 
-, 
+,
+ 
 \begin_inset Formula $i=0,1,..,n$
 \end_inset
 
@@ -1262,7 +1327,8 @@ noprefix "false"
 \end_inset
 
 .
- Then, comparing all 
+ Then,
+ comparing all 
 \family roman
 \series medium
 \shape up
@@ -1317,8 +1383,7 @@ Then the problem is to find the initial
 \end_inset
 
 .
- Gradient descent (GD) is one of the most popular methods to solve such
- optimization problems.
+ Gradient descent (GD) is one of the most popular methods to solve such optimization problems.
 \begin_inset Foot
 status open
 
@@ -1336,7 +1401,10 @@ status open
 \uwave off
 \noun off
 \color none
-Boyd, Stephen; Vandenberghe, Lieven (2004-03-08).
+Boyd,
+ Stephen;
+ Vandenberghe,
+ Lieven (2004-03-08).
  Convex Optimization.
  Cambridge University Press.
  doi:10.1017/cbo9780511804441.
@@ -1364,7 +1432,7 @@ where
 \end_inset
 
  changes.
- So we can change 
+ We can change 
 \begin_inset Formula $\vec{B}_{i}$
 \end_inset
 
@@ -1380,13 +1448,14 @@ where
 \begin_inset Formula $\lambda$
 \end_inset
 
- is called the learning rate.
- Then 
+ is the learning rate.
+ This reduces 
 \begin_inset Formula $L$
 \end_inset
 
- is reduced.
- Similarly, 
+.
+ Similarly,
+ 
 \begin_inset Formula $\delta\vec{B}_{i}$
 \end_inset
 
@@ -1394,17 +1463,20 @@ where
 \begin_inset Formula $\vec{B}_{i},$
 \end_inset
 
-namely, 
+namely,
+ 
 \begin_inset Formula $\vec{r}_{i}=\vec{r}\left(t+\Delta t\right)$
 \end_inset
 
 .
- Eventually the initial state 
+ Eventually,
+ the initial state 
 \begin_inset Formula $\vec{r},\vec{v},\vec{a}$
 \end_inset
 
- receives their corrections.
- Then, we use the new 
+ receives its corrections.
+ Then,
+ we use the new 
 \begin_inset Formula $\vec{s}$
 \end_inset
 
@@ -1416,7 +1488,8 @@ forward pass
 \begin_inset Quotes erd
 \end_inset
 
-), and correct all variables again (
+),
+ and correct all variables again (
 \begin_inset Quotes eld
 \end_inset
 
@@ -1425,7 +1498,8 @@ backward propagation
 \end_inset
 
 ).
- Ideally, these iterations stop when 
+ Ideally,
+ these iterations stop when 
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial L}{\partial\vec{B}_{i}}=0,\hspace{1em}i=0,1...n
@@ -1434,8 +1508,8 @@ backward propagation
 \end_inset
 
 which indicates a local minimum.
- In practice, we stop after a certain number of iterations or if the loss is below
- a threshold.
+ In practice,
+ we stop after a certain number of iterations or if the loss is below a threshold.
 \end_layout
 
 \begin_layout Standard
@@ -1452,9 +1526,11 @@ which indicates a local minimum.
 \uwave off
 \noun off
 \color none
-Thanks to the rapid advances of deep learning (DL), there are plenty of
- mature and powerful frameworks to do GD.
- For this project, I chose PyTorch, the most popular open source DL platform,
+Thanks to the rapid advances of deep learning (DL),
+ there are plenty of mature and powerful frameworks to perform GD.
+ For this project,
+ I chose PyTorch,
+ the most popular open source DL platform,
  developed by Meta.
 \begin_inset Foot
 status open
@@ -1506,7 +1582,8 @@ target "https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
 \end_layout
 
 \begin_layout Standard
-Once the initial state has been estimated, the imaging process in Fig.
+Once the initial state has been estimated,
+ the imaging process in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1514,6 +1591,7 @@ reference "fig:The-equivalent-neural"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -1521,7 +1599,8 @@ noprefix "false"
 \begin_inset Formula $n+1$
 \end_inset
 
-,..., 
+,...,
+ 
 \begin_inset Formula $n+m$
 \end_inset
 
@@ -1537,7 +1616,8 @@ Test of simulated motion
 \end_layout
 
 \begin_layout Standard
-To validate the prediction method, I generated some simulated motion.
+To validate the prediction method,
+ I generated some simulated motion.
  This is the simulation process:
 \end_layout
 
@@ -1546,11 +1626,13 @@ A ball has a location
 \begin_inset Formula $\left(x,y,z\right)$
 \end_inset
 
-, and initial velocity 
+,
+ and initial velocity 
 \begin_inset Formula $\left(v_{x},v_{y},v_{z}\right)$
 \end_inset
 
-, which are randomly generated.
+,
+ which are randomly generated.
  Note that 
 \begin_inset Formula $v_{z}\ge0$
 \end_inset
@@ -1559,12 +1641,15 @@ A ball has a location
 \end_layout
 
 \begin_layout Enumerate
-At each time step, this ball experiences 3 accelerations.
- One is friction, slowing its speed by a fraction.
- Another is perpendicular to its velocity, changing its direction in horizontal
- plane.
+At each time step,
+ this ball experiences 3 accelerations.
+ One is friction,
+ slowing its speed by a fraction.
+ Another is perpendicular to its velocity,
+ changing its direction in horizontal plane.
  The third is gravitational acceleration.
- The first two are randomly generated, but can not be large.
+ The first two are randomly generated,
+ but can not be large.
 \end_layout
 
 \begin_layout Enumerate
@@ -1572,11 +1657,13 @@ If the ball hits the ground (
 \begin_inset Formula $z=-1.5)$
 \end_inset
 
-, it will bounce.
+,
+ it will bounce.
 \end_layout
 
 \begin_layout Enumerate
-At each step, calculate its bounding box.
+At each step,
+ calculate its bounding box.
  
 \end_layout
 
@@ -1589,7 +1676,8 @@ Applying
 \begin_inset Formula $m$
 \end_inset
 
- boxes, and calculate the error from the actual simulated 
+ boxes,
+ calculate the error from the actual simulated 
 \begin_inset Formula $m$
 \end_inset
 
@@ -1608,8 +1696,10 @@ The random accelerations are still applied to the next
 \begin_inset Formula $m$
 \end_inset
 
- images, so the error between prediction and simulation is expected.
- In this simulation, I used 
+ images,
+ so the error between prediction and simulation is expected.
+ In this simulation,
+ I used 
 \begin_inset Formula $m=4$
 \end_inset
 
@@ -1620,6 +1710,7 @@ The random accelerations are still applied to the next
 \begin_layout Standard
 \begin_inset Float figure
 placement h
+alignment document
 wide false
 sideways false
 status open
@@ -1645,8 +1736,7 @@ name "fig:The-trajectory-of-sim"
 
 \end_inset
 
-The trajectory of the predicted and simulated (observed) motion in physical
- 3D world (left) and in video (right) 
+The trajectory of the predicted and simulated (observed) motion in physical 3D world (left) and in video (right) 
 \end_layout
 
 \end_inset
@@ -1668,12 +1758,15 @@ reference "fig:The-trajectory-of-sim"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
  compares the prediction with the simulated ball movement.
- In 3D, they are quite different.
- However, in the 
+ In 3D,
+ they are quite different.
+ However,
+ in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1681,11 +1774,13 @@ video
 \begin_inset Quotes erd
 \end_inset
 
- (2D), they are very close.
- This is not surprising, because the pinhole camera model is a single-eye
- vision system, which lacks depth perception.
- Essentially, there are an infinite number of 3D points that project to
- the same imaging point.
+ (2D),
+ they are very close.
+ This is not surprising,
+ because the pinhole camera model is a single-eye vision system,
+ which lacks depth perception.
+ Essentially,
+ there are an infinite number of 3D points that project to the same imaging point.
 \end_layout
 
 \begin_layout Standard
@@ -1697,23 +1792,28 @@ reference "fig:The-error-"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
 .
- Initially there is a huge error, but it drops rapidly until the error
- is close to 0 pixels.
- After that, the ball bounces off the ground multiple times.
- With each bounce, the error jumps and then drops.
- This is also not surprising, because bouncing is not considered in the
- prediction.
- Even with bouncing, the error is no more than 3 pixels, establishing the
- high accuracy of this model.
+ Initially there is a huge error,
+ but it drops rapidly until the error is close to 0 pixels.
+ After that,
+ the ball bounces off the ground multiple times.
+ With each bounce,
+ the error jumps and then drops.
+ This is also not surprising,
+ because bouncing is not considered in the prediction.
+ Even with bouncing,
+ the error is no more than 3 pixels,
+ establishing the high accuracy of this model.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 placement H
+alignment document
 wide false
 sideways false
 status open
@@ -1766,10 +1866,10 @@ Application to the real scenes
 \end_layout
 
 \begin_layout Standard
-I applied this predictor to a video with many free kicks, and the results
- were very good.
+I applied this predictor to a video with many free kicks,
+ and the results were very promising.
  Fig.
- compares the prediction and observation in some frames.
+ 7 compares the prediction and observation in some frames.
  The complete video is at 
 \begin_inset CommandInset href
 LatexCommand href
@@ -1783,6 +1883,7 @@ target "https://github.com/zcheng10/pdl/blob/main/test/ext_clip_0_boxed.mp4"
 \begin_layout Standard
 \begin_inset Float figure
 placement !h
+alignment document
 wide false
 sideways false
 status open
@@ -1826,11 +1927,15 @@ Note that YOLOv11 only takes image size
 \begin_inset Formula $640\times640$
 \end_inset
 
-, so the input images have to be compressed.
- Thus in many of fast-moving frames, the ball could not be detected, which
- hinders the prediction.
- Nevertheless, the predictions were accurate even when there are no detected
- bounding boxes in several consecutive frames, shown in Fig.
+,
+ so the input images have to be compressed.
+ Thus,
+ in many fast-moving frames,
+ the ball could not be detected,
+ which hinders the prediction.
+ Nevertheless,
+ the predictions were accurate even when there are no detected bounding boxes in several consecutive frames,
+ shown in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1838,6 +1943,7 @@ reference "fig:Observation-(red-boxes)"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
@@ -1854,20 +1960,24 @@ reference "fig:Observation-(red-boxes)"
 plural "false"
 caps "false"
 noprefix "false"
+nolink "false"
 
 \end_inset
 
- (d) shows another interesting finding.
- Due to lack of detected boxes in the previous frames, the prediction (green
- box) is ahead of the observation (red box).
- However, it accurately predicted where the ball would fall.
- In fact, after several frames, the ball fell to the almost exact predicted
- location.
+ (d) reveals another interesting finding.
+ Due to lack of detected boxes in the previous frames,
+ the prediction (green box) is ahead of the observation (red box).
+ However,
+ it accurately predicted where the ball would fall.
+ In fact,
+ after several frames,
+ the ball fell to almost the exact predicted location.
 \end_layout
 
 \begin_layout Standard
-Since we can obtain fairly accurate predictions, we can focus the detection
- of objects in the predicted location, rather than searching the whole image.
+Since we can obtain fairly accurate predictions,
+ we can focus the detection of objects in the predicted location,
+ rather than searching the whole image.
  The detection speed and accuracy can therefore be greatly improved.
 \end_layout
 
@@ -1878,15 +1988,15 @@ Conclusion
 \begin_layout Standard
 
 \series medium
-Our model, applying a physics-based predictor to YOLOv11 to track objects,
+Our model,
+ applying a physics-based predictor to YOLOv11 to track objects,
  has been shown to achieve highly accurate results with fast runtime.
- When YOLOv11 cannot detect the object within a frame, it has the capability
- to provide an accurate prediction of where the object is, allowing us to
- focus on it to make its location more accurate.
- In the future, I would like to focus on making the model more accurate
- when the object bounces.
- This sudden change in velocity is difficult to account for by the model
- and leads to high error immediately after the bounce.
+ When YOLOv11 cannot detect the object within a frame,
+ it has the capability to provide an accurate prediction of where the object is,
+ allowing us to focus on it to make its location more accurate.
+ In the future,
+ I would like to focus on making the model more accurate when the object bounces.
+ This sudden change in velocity is difficult to account for by the model and leads to high error immediately after the bounce.
  This could be resolved by adding a transformer to the model to detect bounces,
  allowing the model to adjust immediately.
 \end_layout
@@ -1898,7 +2008,10 @@ Code
 \begin_layout Subparagraph
 
 \series medium
-The code, along with sample images and videos, can be found here: 
+The code,
+ along with sample images and videos,
+ can be found here:
+ 
 \begin_inset Flex URL
 status open
 
